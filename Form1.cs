@@ -17,6 +17,8 @@ namespace Minesweeper
         private int numMines;
         private int remainingMines;
         private bool[,] minefield;
+        private bool gameStarted;
+        private int spareMineCell;
         private Dictionary<int, Dictionary<int, MinesweeperButton>> buttons;
 
         public Form1()
@@ -62,6 +64,11 @@ namespace Minesweeper
                 int y = temp / this.width;
                 this.minefield[x, y] = true;
             }
+
+            // Get a random index from the remaining unmined cells. We will move
+            // a mine here if the user's first click happens to be on one of the
+            // mined cells.
+            this.spareMineCell = indices[rand.Next(this.numMines, n)];
         }
 
         private void CreateButtons()
@@ -116,7 +123,23 @@ namespace Minesweeper
                 case ButtonState.Opened:
                     if (IsMine(x, y))
                     {
-                        DetonateMines();
+                        if (this.gameStarted)
+                        {
+                            DetonateMines();
+                        }
+                        else
+                        {
+                            // Ensure the first click is safe by moving the mine
+                            // to a free cell, then open the cell that was clicked.
+                            int newX = this.spareMineCell % this.width;
+                            int newY = this.spareMineCell / this.width;
+                            this.minefield[x, y] = false;
+                            this.minefield[newX, newY] = true;
+                            (this.buttons[x])[y].Open();
+
+                            // We only want to do this a maximum of once.
+                            this.gameStarted = true;
+                        }
                     }
                     else
                     {
