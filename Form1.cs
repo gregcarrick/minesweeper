@@ -15,6 +15,7 @@ namespace Minesweeper
         private int width;
         private int height;
         private int numMines;
+        private int remainingMines;
         private bool[,] minefield;
         private Dictionary<int, Dictionary<int, MinesweeperButton>> buttons;
 
@@ -24,7 +25,7 @@ namespace Minesweeper
 
             width = 8;
             height = 8;
-            numMines = 10;
+            this.mineCounter.Value = remainingMines = numMines = 10;
 
             PlaceMines();
             CreateButtons();
@@ -82,7 +83,7 @@ namespace Minesweeper
 
                     column.Add(j, button);
 
-                    button.Opened += button_Opened;
+                    button.StateChanged += button_StateChanged;
                 }
 
                 this.buttons.Add(i, column);
@@ -91,31 +92,49 @@ namespace Minesweeper
             this.panel.ResumeLayout();
         }
 
-        private void button_Opened(object sender, EventArgs e)
+        private void button_StateChanged(object sender, ButtonStateEventArgs e)
         {
             MinesweeperButton button = sender as MinesweeperButton;
             int x = button.X;
             int y = button.Y;
 
-            if (IsMine(x, y))
+            switch (e.NewState)
             {
-                DetonateMines();
-            }
-            else
-            {
-                int adjacentMines = CalculateAdjacentMines(x, y);
-                if (adjacentMines == 0)
-                {
-                    OpenAdjacentCells(x, y);
-                }
-                else
-                {
-                    button.SetMinesNumber(adjacentMines);
-                }
-            }
+                case ButtonState.Default:
+                    if (e.OldState == ButtonState.Flagged
+                        && this.mineCounter != null)
+                    {
+                        this.mineCounter.Value = ++this.remainingMines;
+                    }
+                    break;
+                case ButtonState.Flagged:
+                    if (this.mineCounter != null)
+                    {
+                        this.mineCounter.Value = --this.remainingMines;
+                    }
+                    break;
+                case ButtonState.Opened:
+                    if (IsMine(x, y))
+                    {
+                        DetonateMines();
+                    }
+                    else
+                    {
+                        int adjacentMines = CalculateAdjacentMines(x, y);
+                        if (adjacentMines == 0)
+                        {
+                            OpenAdjacentCells(x, y);
+                        }
+                        else
+                        {
+                            button.SetMinesNumber(adjacentMines);
+                        }
+                    }
 
-            // Each cell can only be opened once, so detach the event handler.
-            button.Opened -= button_Opened;
+                    // Each cell can only be opened once, so detach the event handler.
+                    button.StateChanged -= button_StateChanged;
+                    break;
+            }
         }
 
         /// <summary>
@@ -189,7 +208,7 @@ namespace Minesweeper
                     button = column[j];
                     button.Detonate(IsMine(i, j));
 
-                    button.Opened -= button_Opened;
+                    button.StateChanged -= button_StateChanged;
                 }
             }
         }
