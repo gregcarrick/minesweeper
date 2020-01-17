@@ -31,6 +31,7 @@
             this.panel = new System.Windows.Forms.Panel();
             this.mineCounter = new Minesweeper.CounterControl();
             this.counterControl1 = new Minesweeper.CounterControl();
+            this.timerControl = new Minesweeper.CounterControl();
             this.SuspendLayout();
             // 
             // panel
@@ -47,6 +48,7 @@
             this.mineCounter.Name = "mineCounter";
             this.mineCounter.Size = new System.Drawing.Size(57, 34);
             this.mineCounter.TabIndex = 1;
+            this.mineCounter.Value = 0;
             // 
             // counterControl1
             // 
@@ -55,12 +57,24 @@
             this.counterControl1.Name = "counterControl1";
             this.counterControl1.Size = new System.Drawing.Size(57, 34);
             this.counterControl1.TabIndex = 1;
+            this.counterControl1.Value = 0;
+            // 
+            // timerControl
+            // 
+            this.timerControl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.timerControl.BackColor = System.Drawing.Color.Silver;
+            this.timerControl.Location = new System.Drawing.Point(135, 0);
+            this.timerControl.Name = "timerControl";
+            this.timerControl.Size = new System.Drawing.Size(57, 34);
+            this.timerControl.TabIndex = 2;
+            this.timerControl.Value = 0;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(192, 226);
+            this.Controls.Add(this.timerControl);
             this.Controls.Add(this.mineCounter);
             this.Controls.Add(this.panel);
             this.Name = "Form1";
@@ -74,6 +88,7 @@
         private System.Windows.Forms.Panel panel;
         private CounterControl mineCounter;
         private CounterControl counterControl1;
+        private CounterControl timerControl;
     }
 }
 

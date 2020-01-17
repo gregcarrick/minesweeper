@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Minesweeper
@@ -14,23 +9,35 @@ namespace Minesweeper
     {
         private int width;
         private int height;
+        private int remainingCells;
         private int numMines;
         private int remainingMines;
         private bool[,] minefield;
         private bool gameStarted;
         private int spareMineCell;
         private Dictionary<int, Dictionary<int, MinesweeperButton>> buttons;
+        private Timer timer;
 
         public Form1()
         {
             InitializeComponent();
 
-            width = 8;
-            height = 8;
+            this.width = 8;
+            this.height = 8;
             this.mineCounter.Value = remainingMines = numMines = 10;
+            this.remainingCells = this.width * this.height - this.numMines;
+
+            this.timer = new Timer();
+            this.timer.Interval = 1000;
+            this.timer.Tick += Timer_Tick;
 
             PlaceMines();
             CreateButtons();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            this.timerControl.Value++;
         }
 
         private void PlaceMines()
@@ -136,9 +143,6 @@ namespace Minesweeper
                             this.minefield[x, y] = false;
                             this.minefield[newX, newY] = true;
                             (this.buttons[x])[y].Open();
-
-                            // We only want to do this a maximum of once.
-                            this.gameStarted = true;
                         }
                     }
                     else
@@ -152,10 +156,23 @@ namespace Minesweeper
                         {
                             button.SetMinesNumber(adjacentMines);
                         }
+
+                        this.remainingCells--;
+
+                        if (this.remainingCells == 0)
+                        {
+                            WinGame();
+                        }
                     }
 
                     // Each cell can only be opened once, so detach the event handler.
                     button.StateChanged -= button_StateChanged;
+
+                    if (!this.gameStarted)
+                    {
+                        this.gameStarted = true;
+                        this.timer.Start();
+                    }
                     break;
             }
         }
@@ -229,11 +246,38 @@ namespace Minesweeper
                 for (int j = 0; j < this.height; j++)
                 {
                     button = column[j];
-                    button.Detonate(IsMine(i, j));
+                    if (IsMine(i, j))
+                    {
+                        button.Detonate();
+                    }
+                    else
+                    {
+                        button.Freeze();
+                    }
 
                     button.StateChanged -= button_StateChanged;
                 }
             }
+
+            this.timer.Stop();
+        }
+
+        private void WinGame()
+        {
+            Dictionary<int, MinesweeperButton> column;
+            MinesweeperButton button;
+            for (int i = 0; i < this.width; i++)
+            {
+                column = this.buttons[i];
+                for (int j = 0; j < this.height; j++)
+                {
+                    button = column[j];
+                    button.Freeze();
+                    button.StateChanged -= button_StateChanged;
+                }
+            }
+
+            this.timer.Stop();
         }
     }
 }
