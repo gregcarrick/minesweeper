@@ -1,6 +1,6 @@
 ﻿namespace Minesweeper
 {
-    partial class Form1
+    partial class MainWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -15,6 +15,10 @@
         {
             if (disposing && (components != null))
             {
+                if (this.panel1 != null)
+                {
+                    this.panel1.Paint -= panel1_Paint;
+                }
                 components.Dispose();
             }
             base.Dispose(disposing);
@@ -29,9 +33,10 @@
         private void InitializeComponent()
         {
             this.panel = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.timerControl = new Minesweeper.CounterControl();
             this.mineCounter = new Minesweeper.CounterControl();
             this.counterControl1 = new Minesweeper.CounterControl();
-            this.timerControl = new Minesweeper.CounterControl();
             this.SuspendLayout();
             // 
             // panel
@@ -40,6 +45,24 @@
             this.panel.Name = "panel";
             this.panel.Size = new System.Drawing.Size(192, 192);
             this.panel.TabIndex = 0;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Silver;
+            this.panel1.Location = new System.Drawing.Point(57, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(78, 34);
+            this.panel1.TabIndex = 3;
+            // 
+            // timerControl
+            // 
+            this.timerControl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.timerControl.BackColor = System.Drawing.Color.Silver;
+            this.timerControl.Location = new System.Drawing.Point(135, 0);
+            this.timerControl.Name = "timerControl";
+            this.timerControl.Size = new System.Drawing.Size(57, 34);
+            this.timerControl.TabIndex = 2;
+            this.timerControl.Value = 0;
             // 
             // mineCounter
             // 
@@ -59,26 +82,20 @@
             this.counterControl1.TabIndex = 1;
             this.counterControl1.Value = 0;
             // 
-            // timerControl
-            // 
-            this.timerControl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.timerControl.BackColor = System.Drawing.Color.Silver;
-            this.timerControl.Location = new System.Drawing.Point(135, 0);
-            this.timerControl.Name = "timerControl";
-            this.timerControl.Size = new System.Drawing.Size(57, 34);
-            this.timerControl.TabIndex = 2;
-            this.timerControl.Value = 0;
-            // 
-            // Form1
+            // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(192, 226);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.timerControl);
             this.Controls.Add(this.mineCounter);
             this.Controls.Add(this.panel);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "MainWindow";
+            this.Text = "Minesweeper";
             this.ResumeLayout(false);
 
         }
@@ -89,6 +106,7 @@
         private CounterControl mineCounter;
         private CounterControl counterControl1;
         private CounterControl timerControl;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

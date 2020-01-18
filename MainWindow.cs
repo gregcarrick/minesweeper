@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Minesweeper
 {
-    public partial class Form1 : Form
+    public partial class MainWindow : Form
     {
         private int width;
         private int height;
@@ -18,7 +18,7 @@ namespace Minesweeper
         private Dictionary<int, Dictionary<int, MinesweeperButton>> buttons;
         private Timer timer;
 
-        public Form1()
+        public MainWindow()
         {
             InitializeComponent();
 
@@ -27,12 +27,57 @@ namespace Minesweeper
             this.mineCounter.Value = remainingMines = numMines = 10;
             this.remainingCells = this.width * this.height - this.numMines;
 
+            this.panel1.Paint += panel1_Paint;
+
             this.timer = new Timer();
             this.timer.Interval = 1000;
             this.timer.Tick += Timer_Tick;
 
             PlaceMines();
             CreateButtons();
+        }
+
+        /// <summary>
+        /// Add shading around frame
+        /// </summary>
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            // Shade outside bottom and right
+            e.Graphics.DrawLines(
+                Pens.Gray,
+                new Point[]
+                {
+                    new Point(1,                        this.panel1.Height - 1  ),
+                    new Point(this.panel1.Width - 1,    this.panel1.Height - 1  ),
+                    new Point(this.panel1.Width - 1,    1                       ),
+                });
+            // Shade inside top and left
+            e.Graphics.DrawLines(
+                Pens.Gray,
+                new Point[]
+                {
+                    new Point(2,                        this.panel1.Height - 4  ),
+                    new Point(2,                        2                       ),
+                    new Point(this.panel1.Width - 4,    2                       ),
+                });
+            // Highlight outside top and left
+            e.Graphics.DrawLines(
+                Pens.WhiteSmoke,
+                new Point[]
+                {
+                    new Point(0,                        this.panel1.Height - 2  ),
+                    new Point(0,                        0                       ),
+                    new Point(this.panel1.Width - 2,    0                       ),
+                });
+            // Hightlight inside bottom and right
+            e.Graphics.DrawLines(
+                Pens.WhiteSmoke,
+                new Point[]
+                {
+                    new Point(3,                        this.panel1.Height - 3  ),
+                    new Point(this.panel1.Width - 3,    this.panel1.Height - 3  ),
+                    new Point(this.panel1.Width - 3,    3                       ),
+                });
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -132,7 +177,7 @@ namespace Minesweeper
                     {
                         if (this.gameStarted)
                         {
-                            DetonateMines();
+                            LoseGame();
                         }
                         else
                         {
@@ -236,7 +281,7 @@ namespace Minesweeper
         /// <summary>
         /// Reveals all the mines, ending the game.
         /// </summary>
-        private void DetonateMines()
+        private void LoseGame()
         {
             Dictionary<int, MinesweeperButton> column;
             MinesweeperButton button;
@@ -260,8 +305,20 @@ namespace Minesweeper
             }
 
             this.timer.Stop();
+
+            if (MessageBox.Show(
+                this,
+                "You have lost the game.",
+                ":-(",
+                MessageBoxButtons.OK) == DialogResult.OK)
+            {
+                this.Close();
+            }
         }
 
+        /// <summary>
+        /// Ends the game and shows a nice message.
+        /// </summary>
         private void WinGame()
         {
             Dictionary<int, MinesweeperButton> column;
@@ -278,6 +335,15 @@ namespace Minesweeper
             }
 
             this.timer.Stop();
+
+            if (MessageBox.Show(
+                this,
+                "Congratulations! You have won.",
+                ":-)",
+                MessageBoxButtons.OK) == DialogResult.OK)
+            {
+                this.Close();
+            }
         }
     }
 }
