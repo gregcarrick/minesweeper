@@ -41,7 +41,7 @@ namespace Minesweeper
             this.State = ButtonState.Frozen;
         }
 
-        private void Flag()
+        public void Flag()
         {
             this.BackColor = System.Drawing.Color.Red;
             ChangeState(ButtonState.Flagged);
