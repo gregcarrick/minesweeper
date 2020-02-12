@@ -12,10 +12,10 @@ namespace Minesweeper
         private int remainingCells;
         private int numMines;
         private int remainingMines;
-        private bool[,] minefield;
+        private bool[] minefield;
         private bool gameStarted;
-        private int spareMineCell;
-        private Dictionary<int, Dictionary<int, MinesweeperButton>> buttons;
+        private int spareMineIndex;
+        private MinesweeperButton[] buttons;
         private Timer timer;
 
         public MainWindow()
@@ -87,11 +87,11 @@ namespace Minesweeper
 
         private void PlaceMines()
         {
-            this.minefield = new bool[this.width, this.height];
+            this.minefield = new bool[this.height * this.width];
 
             // Use a truncated Fisher-Yates shuffle to randomly place mines in the array.
             // This algorithm selects a set of random numbers without duplicates.
-            int n = this.width * this.height;
+            int n = this.height * this.width;
             Random rand = new Random();
             int[] indices = new int[n];
             int temp;
@@ -110,42 +110,36 @@ namespace Minesweeper
                 indices[j] = indices[i];
                 indices[i] = temp;
 
-                // Convert the randomly selected value into coordinates in the
-                // 2d array, which are used to place a mine.
-                int x = temp % this.width;
-                int y = temp / this.width;
-                this.minefield[x, y] = true;
+                // Place a mine at the randomly selected index.
+                this.minefield[temp] = true;
             }
 
             // Get a random index from the remaining unmined cells. We will move
             // a mine here if the user's first click happens to be on one of the
             // mined cells.
-            this.spareMineCell = indices[rand.Next(this.numMines, n)];
+            this.spareMineIndex = indices[rand.Next(this.numMines, n)];
         }
 
         private void CreateButtons()
         {
             this.panel.SuspendLayout();
 
-            this.buttons = new Dictionary<int, Dictionary<int, MinesweeperButton>>();
-            for (int i = 0; i < this.width; i++)
+            this.buttons = new MinesweeperButton[this.height * this.width];
+            for (int y = 0; y < this.height; y++)
             {
-                Dictionary<int, MinesweeperButton> column = new Dictionary<int, MinesweeperButton>();
-                for (int j = 0; j < this.height; j++)
+                for (int x = 0; x < this.width; x++)
                 {
-                    MinesweeperButton button = new MinesweeperButton(i, j);
-                    button.Location = new Point(i * 24, j * 24);
+                    MinesweeperButton button = new MinesweeperButton(x, y);
+                    button.Location = new Point(x * 24, y * 24);
                     button.Margin = new Padding(0);
                     button.Padding = new Padding(0);
                     button.Size = new Size(24, 24);
                     panel.Controls.Add(button);
 
-                    column.Add(j, button);
-
                     button.StateChanged += button_StateChanged;
-                }
 
-                this.buttons.Add(i, column);
+                    this.buttons[Get1dArrayIndex(x, y)] = button;
+                }
             }
 
             this.panel.ResumeLayout();
@@ -173,7 +167,8 @@ namespace Minesweeper
                     }
                     break;
                 case ButtonState.Opened:
-                    if (IsMine(x, y))
+                    int index = Get1dArrayIndex(x, y);
+                    if (IsMine(index))
                     {
                         if (this.gameStarted)
                         {
@@ -183,11 +178,9 @@ namespace Minesweeper
                         {
                             // Ensure the first click is safe by moving the mine
                             // to a free cell, then open the cell that was clicked.
-                            int newX = this.spareMineCell % this.width;
-                            int newY = this.spareMineCell / this.width;
-                            this.minefield[x, y] = false;
-                            this.minefield[newX, newY] = true;
-                            (this.buttons[x])[y].Open();
+                            this.minefield[index] = false;
+                            this.minefield[this.spareMineIndex] = true;
+                            this.buttons[index].Open();
                         }
                     }
                     else
@@ -223,30 +216,17 @@ namespace Minesweeper
         }
 
         /// <summary>
-        /// Checks whether a given cell is a mine.
-        /// </summary>
-        private bool IsMine(int x, int y)
-        {
-            return this.minefield[x, y];
-        }
-
-        /// <summary>
         /// Counts the number of mines adjacent to a given cell, including diagonals.
         /// </summary>
         private int CalculateAdjacentMines(int x, int y)
         {
             int mines = 0;
             
-            for (int i = Math.Max(0, x - 1); i <= Math.Min(x + 1, this.width - 1); i++)
+            foreach (int index in GetAdjacentCellIndices(x, y))
             {
-                for (int j = Math.Max(0, y - 1); j <= Math.Min(y + 1, this.height - 1); j++)
+                if (IsMine(index))
                 {
-                    // Exclude the centre square.
-                    if (!(i == x && j == y)
-                        && IsMine(i, j))
-                    {
-                        mines++;
-                    }
+                    mines++;
                 }
             }
 
@@ -254,28 +234,50 @@ namespace Minesweeper
         }
 
         /// <summary>
+        /// Checks whether a given cell is a mine.
+        /// </summary>
+        private bool IsMine(int index)
+        {
+            return this.minefield[index];
+        }
+
+        /// <summary>
         /// Opens all adjactent cells to a given cell, including diagonals.
         /// </summary>
         private void OpenAdjacentCells(int x, int y)
         {
-            Dictionary<int, MinesweeperButton> column;
             MinesweeperButton button;
-            for (int i = Math.Max(0, x - 1); i <= Math.Min(x + 1, this.width - 1); i++)
+            foreach (int index in GetAdjacentCellIndices(x, y))
             {
-                column = this.buttons[i];
-                for (int j = Math.Max(0, y - 1); j <= Math.Min(y + 1, this.height - 1); j++)
+                button = this.buttons[index];
+                if (button.State == ButtonState.Default)
                 {
-                    // Exclude the centre square.
+                    button.Open();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns an enumerable collection of the 1d array indices corresponding
+        /// to the coordinates of a given cell's eight adjacent cells.
+        /// </summary>
+        private IEnumerable<int> GetAdjacentCellIndices(int x, int y)
+        {
+            for (int j = Math.Max(0, y - 1); j <= Math.Min(y + 1, this.height - 1); j++)
+            {
+                for (int i = Math.Max(0, x - 1); i <= Math.Min(x + 1, this.width - 1); i++)
+                {
                     if (!(i == x && j == y))
                     {
-                        button = column[j];
-                        if (button.State == ButtonState.Default)
-                        {
-                            button.Open();
-                        }
+                        yield return Get1dArrayIndex(i, j);
                     }
                 }
             }
+        }
+
+        private int Get1dArrayIndex(int x, int y)
+        {
+            return y * this.width + x;
         }
 
         /// <summary>
@@ -283,25 +285,20 @@ namespace Minesweeper
         /// </summary>
         private void LoseGame()
         {
-            Dictionary<int, MinesweeperButton> column;
             MinesweeperButton button;
-            for (int i = 0; i < this.width; i++)
+            for (int index = 0; index < this.height * this.width; index++)
             {
-                column = this.buttons[i];
-                for (int j = 0; j < this.height; j++)
+                button = this.buttons[index];
+                if (IsMine(index))
                 {
-                    button = column[j];
-                    if (IsMine(i, j))
-                    {
-                        button.Detonate();
-                    }
-                    else
-                    {
-                        button.Freeze();
-                    }
-
-                    button.StateChanged -= button_StateChanged;
+                    button.Detonate();
                 }
+                else
+                {
+                    button.Freeze();
+                }
+
+                button.StateChanged -= button_StateChanged;
             }
 
             this.timer.Stop();
@@ -321,17 +318,16 @@ namespace Minesweeper
         /// </summary>
         private void WinGame()
         {
-            Dictionary<int, MinesweeperButton> column;
             MinesweeperButton button;
-            for (int i = 0; i < this.width; i++)
+            for (int index = 0; index < this.height * this.width; index++)
             {
-                column = this.buttons[i];
-                for (int j = 0; j < this.height; j++)
+                button = this.buttons[index];
+                if (this.minefield[index] && button.State == ButtonState.Default)
                 {
-                    button = column[j];
-                    button.Freeze();
-                    button.StateChanged -= button_StateChanged;
+                    button.Flag();
                 }
+                button.Freeze();
+                button.StateChanged -= button_StateChanged;
             }
 
             this.timer.Stop();
