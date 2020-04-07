@@ -246,8 +246,15 @@ namespace Minesweeper
                                 dc.DrawImage(StaticResources.DetonatedMineImage, rect);
                                 break;
                             case CellState.Flagged:
+                                if (this.Model.State == GameState.Lost && !cell.IsMine)
+                                {
+                                    dc.DrawImage(StaticResources.IncorrectFlagImage, GetCellRectFromCell(cell));
+                                }
+                                else
+                                {
+                                    dc.DrawImage(StaticResources.FlagImage, GetCellRectFromCell(cell));
+                                }
                                 DrawButtonShadows(dc, x, y);
-                                dc.DrawImage(StaticResources.FlagImage, GetCellRectFromCell(cell));
                                 break;
                             case CellState.Frozen:
                                 DrawButtonShadows(dc, x, y);

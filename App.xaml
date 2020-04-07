@@ -8,8 +8,9 @@
         <SolidColorBrush x:Key="HighlightBrush" Color="#FFD3D3F1"/>
         <SolidColorBrush x:Key="ShadowBrush" Color="#FF80809E"/>
         <SolidColorBrush x:Key="MouseOverBrush" Color="#9FD3D3D3"/>
-        <BitmapImage x:Key="FlagImage" UriSource="Images/Flag.png"/>
-        <BitmapImage x:Key="MineImage" UriSource="Images/Mine.png"/>
-        <BitmapImage x:Key="DetonatedMineImage" UriSource="Images/Detonated-Mine.png"/>
+        <BitmapImage x:Key="FlagImage" UriSource="Images/flag.png"/>
+        <BitmapImage x:Key="IncorrectFlagImage" UriSource="Images/incorrect-flag.png"/>
+        <BitmapImage x:Key="MineImage" UriSource="Images/mine.png"/>
+        <BitmapImage x:Key="DetonatedMineImage" UriSource="Images/detonated-mine.png"/>
     </Application.Resources>
 </Application>

@@ -11,8 +11,9 @@ namespace Minesweeper
         public static Brush ShadowBrush = (Brush)Application.Current.Resources["ShadowBrush"];
         public static Brush MouseOverBrush = (Brush)Application.Current.Resources["MouseOverBrush"];
 
-        public static BitmapImage DetonatedMineImage = (BitmapImage)Application.Current.Resources["DetonatedMineImage"];
         public static BitmapImage FlagImage = (BitmapImage)Application.Current.Resources["FlagImage"];
+        public static BitmapImage IncorrectFlagImage = (BitmapImage)Application.Current.Resources["IncorrectFlagImage"];
         public static BitmapImage MineImage = (BitmapImage)Application.Current.Resources["MineImage"];
+        public static BitmapImage DetonatedMineImage = (BitmapImage)Application.Current.Resources["DetonatedMineImage"];
     }
 }
