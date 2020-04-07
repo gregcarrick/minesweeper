@@ -1,2 +1,2 @@
 # Minesweeper
-Minesweeper as a Winforms application
+Minesweeper as a WPF app

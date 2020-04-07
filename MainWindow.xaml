@@ -1,0 +1,16 @@
+﻿<Window x:Class="Minesweeper.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Minesweeper"
+        mc:Ignorable="d"
+        x:Name="mainWindow" Title="Minesweeper" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
+    <DockPanel x:Name="dockPanel">
+        <DockPanel x:Name="controlPanel" DockPanel.Dock="Top" LastChildFill="False" Background="{StaticResource BgBrush}">
+            <local:Counter x:Name="timer" DockPanel.Dock="Left" Value="{Binding ElementName=mainWindow, Path=TimerValue}"/>
+            <local:Counter x:Name="minesCounter" DockPanel.Dock="Right" Value="{Binding ElementName=mainWindow, Path=RemainingMines}"/>
+        </DockPanel>
+        <local:BoardView x:Name="boardView" Background="{StaticResource BgBrush}" Highlight="{StaticResource HighlightBrush}" Shadow="{StaticResource ShadowBrush}" HorizontalAlignment="Left" Height="192" Margin="0,0,0,0" VerticalAlignment="Top" Width="192"/>
+    </DockPanel>
+</Window>
