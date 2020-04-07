@@ -259,24 +259,6 @@ namespace Minesweeper
         }
 
         /// <summary>
-        /// Counts the number of mines adjacent to a given cell, including diagonals.
-        /// </summary>
-        private int CalculateAdjacentMines(int x, int y)
-        {
-            int mines = 0;
-
-            foreach (Tuple<int, int> index in GetAdjacentCellCoords(x, y))
-            {
-                if (this.mineField[index.Item1, index.Item2].IsMine)
-                {
-                    mines++;
-                }
-            }
-
-            return mines;
-        }
-
-        /// <summary>
         /// Returns an enumerable collection of the 1d array indices corresponding
         /// to the coordinates of a given cell's eight adjacent cells.
         /// </summary>

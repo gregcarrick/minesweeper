@@ -120,11 +120,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Flag.png" />
+    <Resource Include="Images\flag.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Detonated-Mine.png" />
-    <Resource Include="Images\Mine.png" />
+    <Resource Include="Images\detonated-mine.png" />
+    <Resource Include="Images\mine.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\incorrect-flag.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
