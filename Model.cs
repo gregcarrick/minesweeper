@@ -233,6 +233,16 @@ namespace Minesweeper
         private void Win()
         {
             this.timer.Stop();
+            for (int y = 0; y < this.rowCount; y++)
+            {
+                for (int x = 0; x < this.columnCount; x++)
+                {
+                    if (this.mineField[x, y].IsMine)
+                    {
+                        this.mineField[x, y].State = CellState.Flagged;
+                    }
+                }
+            }
             this.State = GameState.Won;
         }
 

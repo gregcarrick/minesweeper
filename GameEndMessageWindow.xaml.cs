@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -67,7 +67,7 @@ namespace Minesweeper
             Application.Current.Shutdown();
         }
 
-        protected override void OnClosed(EventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             if (this.restartButton != null)
             {
@@ -77,7 +77,7 @@ namespace Minesweeper
             {
                 this.quitButton.Click -= quitButton_Click;
             }
-            base.OnClosed(e);
+            base.OnClosing(e);
         }
 
         protected override void OnKeyDown(KeyEventArgs e)

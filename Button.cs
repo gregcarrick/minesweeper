@@ -2,13 +2,11 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Linq;
-using System.Windows.Controls;
 using System.Globalization;
 
 namespace Minesweeper
 {
-    public class GameEndWindowButton : FrameworkElement
+    public class Button : FrameworkElement
     {
         private DrawingVisual backgroundVisual;
         private DrawingVisual buttonVisual;
@@ -19,7 +17,7 @@ namespace Minesweeper
         public event MouseEventHandler Click;
 
         public static DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string), typeof(GameEndWindowButton),
+            DependencyProperty.Register("Text", typeof(string), typeof(Button),
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None));
         public string Text
         {
@@ -34,7 +32,7 @@ namespace Minesweeper
             }
         }
 
-        public GameEndWindowButton()
+        public Button()
         {
             this.backgroundVisual = new DrawingVisual();
             AddDrawingVisual(this.backgroundVisual);
@@ -127,7 +125,7 @@ namespace Minesweeper
         {
             using var tv = this.textVisual.RenderOpen();
             FormattedText text = new FormattedText(
-                this.Text,
+                this.Text ?? "",
                 CultureInfo.InvariantCulture,
                 FlowDirection.LeftToRight,
                 new Typeface("Consolas"),
