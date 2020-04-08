@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace Minesweeper
 {
@@ -96,13 +93,6 @@ namespace Minesweeper
             {
                 DrawBoard();
             }
-        }
-
-        protected override void OnInitialized(EventArgs e)
-        {
-            base.OnInitialized(e);
-
-            //DrawBoard();
         }
 
         protected override void OnRender(DrawingContext drawingContext)
@@ -220,7 +210,6 @@ namespace Minesweeper
 
         private void AddDrawingVisual(DrawingVisual drawingVisual)
         {
-            AddLogicalChild(drawingVisual);
             AddVisualChild(drawingVisual);
             this.visuals.Add(drawingVisual);
         }
@@ -246,29 +235,10 @@ namespace Minesweeper
                                 dc.DrawImage(StaticResources.DetonatedMineImage, rect);
                                 break;
                             case CellState.Flagged:
-                                if (this.Model.State == GameState.Lost && !cell.IsMine)
-                                {
-                                    dc.DrawImage(StaticResources.IncorrectFlagImage, GetCellRectFromCell(cell));
-                                }
-                                else
-                                {
-                                    dc.DrawImage(StaticResources.FlagImage, GetCellRectFromCell(cell));
-                                }
+                                dc.DrawImage(
+                                    (this.Model.State == GameState.Lost && !cell.IsMine) ? StaticResources.IncorrectFlagImage : StaticResources.FlagImage,
+                                    GetCellRectFromCell(cell));
                                 DrawButtonShadows(dc, x, y);
-                                break;
-                            case CellState.Frozen:
-                                DrawButtonShadows(dc, x, y);
-                                if (this.Model[x, y].IsMine)
-                                {
-                                    if (this.Model.State == GameState.Lost)
-                                    {
-                                        dc.DrawImage(StaticResources.MineImage, GetCellRectFromCell(cell));
-                                    }
-                                    else if (this.Model.State == GameState.Won)
-                                    {
-                                        dc.DrawImage(StaticResources.FlagImage, GetCellRectFromCell(cell));
-                                    }
-                                }
                                 break;
                             case CellState.Opened:
                                 FormattedText text = this.GetNumberText(cell);
@@ -283,7 +253,14 @@ namespace Minesweeper
                                 dc.DrawRectangle(null, new Pen(this.Shadow, 1), GetCellRectFromCell(cell));
                                 break;
                             case CellState.Default:
-                                DrawButtonShadows(dc, x, y);
+                                if (this.Model.State == GameState.Lost && cell.IsMine)
+                                {
+                                    dc.DrawImage(StaticResources.MineImage, GetCellRectFromCell(cell));
+                                }
+                                else
+                                {
+                                    DrawButtonShadows(dc, x, y);
+                                }
                                 break;
                         }
                     }

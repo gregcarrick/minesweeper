@@ -79,6 +79,7 @@ namespace Minesweeper
             this.model.Reset(this.RowCount, this.ColumnCount, this.Mines);
             this.boardView.Model = this.model;
             this.boardView.Reset(this.RowCount, this.ColumnCount);
+            this.dockPanel.IsEnabled = true;
         }
 
         private void model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -92,18 +93,13 @@ namespace Minesweeper
                     this.RemainingMines = this.model.RemainingMines;
                     break;
                 case "State":
-                    GameEndMessageWindow window;
                     switch (this.model.State)
                     {
                         case GameState.Lost:
-                            window = new GameEndMessageWindow(false, this);
-                            window.Owner = Window.GetWindow(this); // Opens the window over the game window.
-                            window.Show();
+                            ShowGameOverWindow(false);
                             break;
                         case GameState.Won:
-                            window = new GameEndMessageWindow(true, this);
-                            window.Owner = Window.GetWindow(this);
-                            window.Show();
+                            ShowGameOverWindow(true);
                             break;
                         default:
                             break;
@@ -112,6 +108,14 @@ namespace Minesweeper
                 default:
                     break;
             }
+        }
+
+        private void ShowGameOverWindow(bool win)
+        {
+            GameEndMessageWindow window = new GameEndMessageWindow(win, this);
+            window.Owner = GetWindow(this); // Pop up over the centre of the main window
+            window.Show();
+            this.dockPanel.IsEnabled = false;
         }
     }
 }
