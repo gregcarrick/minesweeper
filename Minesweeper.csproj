@@ -59,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Button.cs" />
     <Compile Include="StaticResources.cs" />
     <Page Include="GameEndMessageWindow.xaml">
       <SubType>Designer</SubType>
@@ -80,7 +81,6 @@
     <Compile Include="GameEndMessageWindow.xaml.cs">
       <DependentUpon>GameEndMessageWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GameEndWindowButton.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="MainWindow.xaml.cs">

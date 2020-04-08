@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 
 namespace Minesweeper
 {
@@ -16,6 +17,8 @@ namespace Minesweeper
             Reset();
 
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+            this.newGameButton.Click += newGameButton_Click;
         }
 
         public int RowCount
@@ -80,6 +83,20 @@ namespace Minesweeper
             this.boardView.Model = this.model;
             this.boardView.Reset(this.RowCount, this.ColumnCount);
             this.dockPanel.IsEnabled = true;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (this.newGameButton != null)
+            {
+                this.newGameButton.Click -= newGameButton_Click;
+            }
+            base.OnClosing(e);
+        }
+
+        private void newGameButton_Click(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Reset();
         }
 
         private void model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
