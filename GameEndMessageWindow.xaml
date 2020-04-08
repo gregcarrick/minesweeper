@@ -4,10 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Minesweeper"
-        mc:Ignorable="d" Background="{StaticResource BgBrush}" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
-    <DockPanel Margin="0" Width="308" Height="130">
-        <TextBlock x:Name="text" Height="60" Margin ="6, 12, 6, 6" VerticalAlignment="Top" DockPanel.Dock="Top"/>
-        <local:GameEndWindowButton x:Name="restartButton" Width="145" Height="40" DockPanel.Dock="Left" Margin="6,6,3,6" Text="Play again"/>
-        <local:GameEndWindowButton x:Name="quitButton" Width="145" Height="40" DockPanel.Dock="Right" Margin="3,6,6,6" Text="Quit"/>
-    </DockPanel>
+        mc:Ignorable="d" Background="{StaticResource BgBrush}" ResizeMode="NoResize" SizeToContent="WidthAndHeight" ShowInTaskbar="False" WindowStyle="None">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="36"/>
+            <RowDefinition Height="72"/>
+            <RowDefinition Height="52"/>
+        </Grid.RowDefinitions>
+        <Label x:Name="title" Height="36" Padding ="6" VerticalAlignment="Top" DockPanel.Dock="Top" FontFamily="Consolas" FontSize="18" FontWeight="Bold" BorderBrush="{StaticResource ShadowBrush}" BorderThickness="1" Background="{StaticResource HighlightBrush}" Grid.Row="0"/>
+        <Label x:Name="text" Height="72" Padding ="6" VerticalAlignment="Top" DockPanel.Dock="Top" FontFamily="Consolas" FontSize="16" BorderBrush="{StaticResource ShadowBrush}" BorderThickness="1" Grid.Row="1"/>
+        <DockPanel Margin="0" Width="308" Height="52" Grid.Row="2">
+            <local:GameEndWindowButton x:Name="restartButton" Width="145" Height="40" DockPanel.Dock="Left" Margin="6,6,3,6" Text="Play again"/>
+            <local:GameEndWindowButton x:Name="quitButton" Width="145" Height="40" DockPanel.Dock="Right" Margin="3,6,6,6" Text="Quit"/>
+        </DockPanel>
+    </Grid>
 </Window>
