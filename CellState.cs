@@ -6,6 +6,5 @@
         Flagged,
         Opened,
         Detonated,
-        Frozen,
     }
 }

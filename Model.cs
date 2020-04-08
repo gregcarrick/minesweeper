@@ -233,29 +233,13 @@ namespace Minesweeper
         private void Win()
         {
             this.timer.Stop();
-            FreezeBoard();
             this.State = GameState.Won;
         }
 
         private void Lose()
         {
             this.timer.Stop();
-            FreezeBoard();
             this.State = GameState.Lost;
-        }
-
-        private void FreezeBoard()
-        {
-            for (int y = 0; y < this.rowCount; y++)
-            {
-                for (int x = 0; x < this.columnCount; x++)
-                {
-                    if (this.mineField[x, y].State == CellState.Default)
-                    {
-                        this.mineField[x, y].State = CellState.Frozen;
-                    }
-                }
-            }
         }
 
         /// <summary>
