@@ -34,39 +34,6 @@ namespace Minesweeper
             this.restartDelegate = window.Reset;
         }
 
-        private void gameEndMessageWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            // Prevents the player from closing the popup.
-            e.Cancel = true;
-        }
-
-        private void restartButton_Click(object sender, MouseEventArgs e)
-        {
-            Restart();
-        }
-
-        private void Restart()
-        {
-            if (this.restartDelegate != null)
-            {
-                this.restartDelegate.DynamicInvoke();
-            }
-
-            this.Closing -= gameEndMessageWindow_Closing;
-            Close();
-        }
-
-        private void quitButton_Click(object sender, MouseEventArgs e)
-        {
-            Quit();
-        }
-
-        private void Quit()
-        {
-            this.Closing -= gameEndMessageWindow_Closing;
-            Application.Current.Shutdown();
-        }
-
         protected override void OnClosing(CancelEventArgs e)
         {
             if (this.restartButton != null)
@@ -112,6 +79,39 @@ namespace Minesweeper
             {
                 this.Cursor = Cursors.Arrow;
             }
+        }
+
+        private void gameEndMessageWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Prevents the player from closing the popup.
+            e.Cancel = true;
+        }
+
+        private void restartButton_Click(object sender, MouseEventArgs e)
+        {
+            Restart();
+        }
+
+        private void Restart()
+        {
+            if (this.restartDelegate != null)
+            {
+                this.restartDelegate.DynamicInvoke();
+            }
+
+            this.Closing -= gameEndMessageWindow_Closing;
+            Close();
+        }
+
+        private void quitButton_Click(object sender, MouseEventArgs e)
+        {
+            Quit();
+        }
+
+        private void Quit()
+        {
+            this.Closing -= gameEndMessageWindow_Closing;
+            Application.Current.Shutdown();
         }
     }
 }

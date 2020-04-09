@@ -7,10 +7,15 @@
         mc:Ignorable="d"
         x:Name="mainWindow" Icon="{StaticResource MineImage}" Title="Minesweeper" ResizeMode="NoResize" SizeToContent="WidthAndHeight" Background="{StaticResource BgBrush}" FontFamily="Consolas">
     <DockPanel x:Name="dockPanel">
+        <Menu x:Name="menu" Background="{StaticResource HighlightBrush}" BorderBrush="{StaticResource ShadowBrush}" BorderThickness="1" FontFamily="Consolas" FontSize="14" DockPanel.Dock="Top">
+            <MenuItem x:Name="gameMenu" Header="Game">
+                <MenuItem x:Name="newGameMenuItem" Header="New Game..." Click="newGameMenuItem_Click" Background="{StaticResource HighlightBrush}"/>
+            </MenuItem>
+        </Menu>
         <DockPanel x:Name="controlPanel" DockPanel.Dock="Top" LastChildFill="False">
             <local:Counter x:Name="timer" DockPanel.Dock="Left" Value="{Binding ElementName=mainWindow, Path=TimerValue}"/>
             <local:Counter x:Name="minesCounter" DockPanel.Dock="Right" Value="{Binding ElementName=mainWindow, Path=RemainingMines}"/>
-            <local:Button x:Name="newGameButton" Height="34" Width="78" Text="New Game"/>
+            <local:Button x:Name="newGameButton" Height="34" Width="78" Text="New Game" Click="newGameButton_Click"/>
         </DockPanel>
         <local:BoardView x:Name="boardView" Background="{StaticResource BgBrush}" Highlight="{StaticResource HighlightBrush}" Shadow="{StaticResource ShadowBrush}" HorizontalAlignment="Left" Height="192" Margin="0,0,0,0" VerticalAlignment="Top" Width="192"/>
     </DockPanel>

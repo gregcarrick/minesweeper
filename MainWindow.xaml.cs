@@ -17,8 +17,6 @@ namespace Minesweeper
             Reset();
 
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-
-            this.newGameButton.Click += newGameButton_Click;
         }
 
         public int RowCount
@@ -133,6 +131,14 @@ namespace Minesweeper
             window.Owner = GetWindow(this); // Pop up over the centre of the main window
             window.Show();
             this.dockPanel.IsEnabled = false;
+        }
+
+        private void newGameMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            NewGameSettingsWindow window = new NewGameSettingsWindow();
+            window.Owner = GetWindow(this);
+            window.Show();
+            // this.dockPanel.IsEnabled = false;
         }
     }
 }

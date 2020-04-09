@@ -61,6 +61,9 @@
     </ApplicationDefinition>
     <Compile Include="Button.cs" />
     <Compile Include="StaticResources.cs" />
+    <Compile Include="NewGameSettingsWindow.xaml.cs">
+      <DependentUpon>NewGameSettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="GameEndMessageWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -90,6 +93,10 @@
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="NewGameSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
