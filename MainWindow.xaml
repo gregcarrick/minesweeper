@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Minesweeper"
         mc:Ignorable="d"
-        x:Name="mainWindow" Icon="{StaticResource MineImage}" Title="Minesweeper" ResizeMode="NoResize" SizeToContent="WidthAndHeight" Background="{StaticResource BgBrush}">
+        x:Name="mainWindow" Icon="{StaticResource MineImage}" Title="Minesweeper" ResizeMode="NoResize" SizeToContent="WidthAndHeight" Background="{StaticResource BgBrush}" FontFamily="Consolas">
     <DockPanel x:Name="dockPanel">
         <DockPanel x:Name="controlPanel" DockPanel.Dock="Top" LastChildFill="False">
             <local:Counter x:Name="timer" DockPanel.Dock="Left" Value="{Binding ElementName=mainWindow, Path=TimerValue}"/>

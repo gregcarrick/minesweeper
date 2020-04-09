@@ -109,8 +109,8 @@ namespace Minesweeper
             Location loc = GetLocationFromPoint(e.GetPosition(this));
             if (IsValidLocation(loc) && this.Model[loc.X, loc.Y].State == CellState.Default)
             {
-                using DrawingContext dc = this.hoverVisual.RenderOpen();
-                dc.DrawRectangle(this.Background, null, GetCellRectFromLocation(loc));
+                using var hv = this.hoverVisual.RenderOpen();
+                hv.DrawRectangle(this.Background, null, GetCellRectFromLocation(loc));
             }
         }
 
@@ -123,16 +123,14 @@ namespace Minesweeper
             {
                 this.Model.OpenCell(loc.X, loc.Y);
             }
-            using (DrawingContext dc = this.hoverVisual.RenderOpen())
+            if (IsValidLocation(loc) && this.Model[loc.X, loc.Y].State == CellState.Default)
             {
-                if (IsValidLocation(loc) && this.Model[loc.X, loc.Y].State == CellState.Default)
-                {
-                    dc.DrawRectangle(StaticResources.MouseOverBrush, null, GetCellRectFromLocation(loc));
-                }
-                else
-                {
-                    // Clear the top layer of any previous graphic.
-                }
+                using var hv = this.hoverVisual.RenderOpen();
+                hv.DrawRectangle(StaticResources.MouseOverBrush, null, GetCellRectFromLocation(loc));
+            }
+            else
+            {
+                // Clear the top layer of any previous graphic.
             }
 
             DrawBoard();
@@ -147,16 +145,14 @@ namespace Minesweeper
             {
                 this.Model.FlagCell(loc.X, loc.Y);
             }
-            using (DrawingContext dc = this.hoverVisual.RenderOpen())
+            if (IsValidLocation(loc) && this.Model[loc.X, loc.Y].State == CellState.Default)
             {
-                if (IsValidLocation(loc) && this.Model[loc.X, loc.Y].State == CellState.Default)
-                {
-                    dc.DrawRectangle(StaticResources.MouseOverBrush, null, GetCellRectFromLocation(loc));
-                }
-                else
-                {
-                    // Clear the top layer of any previous graphic.
-                }
+                using var hv = this.hoverVisual.RenderOpen();
+                hv.DrawRectangle(StaticResources.MouseOverBrush, null, GetCellRectFromLocation(loc));
+            }
+            else
+            {
+                // Clear the top layer of any previous graphic.
             }
 
             DrawBoard();
@@ -173,20 +169,20 @@ namespace Minesweeper
                 if (this.Model[loc.X, loc.Y].State == CellState.Default)
                 {
                     // Draw hover effect.
-                    using DrawingContext dc = this.hoverVisual.RenderOpen();
+                    using var hv = this.hoverVisual.RenderOpen();
                     Brush brush = StaticResources.MouseOverBrush;
                     if (e.LeftButton == MouseButtonState.Pressed)
                     {
                         brush = this.Background;
                     }
-                    dc.DrawRectangle(brush, null, GetCellRectFromLocation(loc));
+                    hv.DrawRectangle(brush, null, GetCellRectFromLocation(loc));
                 }
                 else
                 {
                     // We're still over the board, but over a cell that's
                     // either opened or flagged.
                     // Clear the top layer of any previous graphic.
-                    using DrawingContext dc = this.hoverVisual.RenderOpen();
+                    using var hv = this.hoverVisual.RenderOpen();
                 }
 
                 this.last = loc;
@@ -218,8 +214,8 @@ namespace Minesweeper
         {
             if (this.Model != null)
             {
-                using DrawingContext dc = this.boardVisual.RenderOpen();
-                dc.DrawRectangle(this.Background, null, this.GetRect());
+                using var bv = this.boardVisual.RenderOpen();
+                bv.DrawRectangle(this.Background, null, this.GetRect());
 
                 for (int y = 0; y < this.rowCount; y++)
                 {
@@ -231,14 +227,14 @@ namespace Minesweeper
                             case CellState.Detonated:
                                 Rect rect = GetCellRectFromCell(cell);
                                 // Draw outline
-                                dc.DrawRectangle(null, new Pen(this.Shadow, 1), rect);
-                                dc.DrawImage(StaticResources.DetonatedMineImage, rect);
+                                bv.DrawRectangle(null, new Pen(this.Shadow, 1), rect);
+                                bv.DrawImage(StaticResources.DetonatedMineImage, rect);
                                 break;
                             case CellState.Flagged:
-                                dc.DrawImage(
+                                bv.DrawImage(
                                     (this.Model.State == GameState.Lost && !cell.IsMine) ? StaticResources.IncorrectFlagImage : StaticResources.FlagImage,
                                     GetCellRectFromCell(cell));
-                                DrawButtonShadows(dc, x, y);
+                                DrawButtonShadows(bv, x, y);
                                 break;
                             case CellState.Opened:
                                 FormattedText text = this.GetNumberText(cell);
@@ -247,19 +243,19 @@ namespace Minesweeper
                                     Point origin = (Point)(
                                         (Vector)text.GetOriginOfCenteredText(cellSize, cellSize)
                                         + new Vector(x * cellSize, y * cellSize));
-                                    dc.DrawText(text, origin);
+                                    bv.DrawText(text, origin);
                                 }
                                 // Draw outline
-                                dc.DrawRectangle(null, new Pen(this.Shadow, 1), GetCellRectFromCell(cell));
+                                bv.DrawRectangle(null, new Pen(this.Shadow, 1), GetCellRectFromCell(cell));
                                 break;
                             case CellState.Default:
                                 if (this.Model.State == GameState.Lost && cell.IsMine)
                                 {
-                                    dc.DrawImage(StaticResources.MineImage, GetCellRectFromCell(cell));
+                                    bv.DrawImage(StaticResources.MineImage, GetCellRectFromCell(cell));
                                 }
                                 else
                                 {
-                                    DrawButtonShadows(dc, x, y);
+                                    DrawButtonShadows(bv, x, y);
                                 }
                                 break;
                         }
