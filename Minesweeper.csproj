@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{A18470A0-2C9B-4D6C-B247-5E21100CAF14}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Minesweeper2</RootNamespace>
-    <AssemblyName>Minesweeper2</AssemblyName>
+    <RootNamespace>Minesweeper</RootNamespace>
+    <AssemblyName>Minesweeper</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>

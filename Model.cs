@@ -117,7 +117,7 @@ namespace Minesweeper
 
         private void PlaceMines()
         {
-            this.mineField = new Cell[this.rowCount, this.columnCount];
+            this.mineField = new Cell[this.columnCount, this.rowCount];
             for (int y = 0; y < this.rowCount; y++)
             {
                 for (int x = 0; x < this.columnCount; x++)

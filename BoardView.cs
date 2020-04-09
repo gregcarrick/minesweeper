@@ -10,8 +10,8 @@ namespace Minesweeper
     public class BoardView : FrameworkElement
     {
         private const int cellSize = 24;
-        private int rowCount = 8;
-        private int columnCount = 8;
+        private int rowCount;
+        private int columnCount;
 
         List<Visual> visuals = new List<Visual>();
         private DrawingVisual boardVisual;
@@ -88,6 +88,9 @@ namespace Minesweeper
         {
             this.rowCount = rowCount;
             this.columnCount = columnCount;
+
+            this.Width = this.columnCount * cellSize;
+            this.Height = this.rowCount * cellSize;
 
             if (this.boardVisual != null)
             {

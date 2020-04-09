@@ -22,5 +22,41 @@ namespace Minesweeper.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
+        public int Rows {
+            get {
+                return ((int)(this["Rows"]));
+            }
+            set {
+                this["Rows"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
+        public int Columns {
+            get {
+                return ((int)(this["Columns"]));
+            }
+            set {
+                this["Columns"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int Mines {
+            get {
+                return ((int)(this["Mines"]));
+            }
+            set {
+                this["Mines"] = value;
+            }
+        }
     }
 }

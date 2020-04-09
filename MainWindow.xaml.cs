@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using Minesweeper.Properties;
+using System;
+using System.ComponentModel;
 using System.Windows;
 
 namespace Minesweeper
@@ -75,11 +77,17 @@ namespace Minesweeper
 
         public void Reset()
         {
+            // Put the settings back within allowed ranges if user has modified the settings file.
+            Settings.Default.Columns = Math.Max(8, Math.Min(64, Settings.Default.Columns));
+            Settings.Default.Rows = Math.Max(8, Math.Min(64, Settings.Default.Rows));
+            Settings.Default.Mines =
+                Math.Max(10, Math.Min(Math.Min(99, Settings.Default.Columns * Settings.Default.Rows - 8), Settings.Default.Mines));
+
             this.model = new Model();
             this.model.PropertyChanged += model_PropertyChanged;
-            this.model.Reset(this.RowCount, this.ColumnCount, this.Mines);
+            this.model.Reset(Settings.Default.Rows, Settings.Default.Columns, Settings.Default.Mines);
             this.boardView.Model = this.model;
-            this.boardView.Reset(this.RowCount, this.ColumnCount);
+            this.boardView.Reset(Settings.Default.Rows, Settings.Default.Columns);
             this.dockPanel.IsEnabled = true;
         }
 

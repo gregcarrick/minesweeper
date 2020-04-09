@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Minesweeper"
+        xmlns:prop="clr-namespace:Minesweeper.Properties"
         mc:Ignorable="d"
         Title="New Game" Background="{StaticResource BgBrush}" FontFamily="Consolas" ShowInTaskbar="False" WindowStyle="None" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
     <Grid>
@@ -43,7 +44,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock x:Name="widthLabel" Text="Width:" FontSize="16" Margin="6,0,0,0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0"/>
-                    <TextBox x:Name="widthTextBox" Width="60" Height="28" Margin="6" Grid.Column="1" Grid.Row="0"/>
+                    <TextBox x:Name="widthTextBox" Width="60" Height="28" Margin="6" Text="{Binding Source={x:Static prop:Settings.Default}, Path=Column}" Grid.Column="1" Grid.Row="0"/>
                     <TextBlock x:Name="heightLabel" Text="Height:" FontSize="16" Margin="6,0,0,0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1"/>
                     <TextBox x:Name="heightTextBox" Width="60" Height="28" Margin="6" Grid.Column="1" Grid.Row="1"/>
                     <TextBlock x:Name="minesLabel" Text="Mines:" FontSize="16" Margin="6,0,0,0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2"/>
