@@ -123,9 +123,10 @@ namespace Minesweeper
             {
                 this.Model.OpenCell(loc.X, loc.Y);
             }
+
+            using var hv = this.hoverVisual.RenderOpen();
             if (IsValidLocation(loc) && this.Model[loc.X, loc.Y].State == CellState.Default)
             {
-                using var hv = this.hoverVisual.RenderOpen();
                 hv.DrawRectangle(StaticResources.MouseOverBrush, null, GetCellRectFromLocation(loc));
             }
             else
@@ -145,9 +146,10 @@ namespace Minesweeper
             {
                 this.Model.FlagCell(loc.X, loc.Y);
             }
+
+            using var hv = this.hoverVisual.RenderOpen();
             if (IsValidLocation(loc) && this.Model[loc.X, loc.Y].State == CellState.Default)
             {
-                using var hv = this.hoverVisual.RenderOpen();
                 hv.DrawRectangle(StaticResources.MouseOverBrush, null, GetCellRectFromLocation(loc));
             }
             else
@@ -192,10 +194,8 @@ namespace Minesweeper
         protected override void OnMouseLeave(MouseEventArgs e)
         {
             base.OnMouseLeave(e);
-            using (this.hoverVisual.RenderOpen())
-            {
-                // Clear the top layer of any previous graphic.
-            }
+            // Clear the top layer of any previous graphic.
+            using var hv = this.hoverVisual.RenderOpen();
         }
 
 
