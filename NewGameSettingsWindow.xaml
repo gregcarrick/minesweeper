@@ -4,9 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Minesweeper"
-        xmlns:prop="clr-namespace:Minesweeper.Properties"
         mc:Ignorable="d"
         Title="New Game" Background="{StaticResource BgBrush}" FontFamily="Consolas" ShowInTaskbar="False" WindowStyle="None" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
+    <Window.Resources>
+        <local:ComparisonConverter x:Key="ComparisonConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="36"/>
@@ -16,8 +18,8 @@
         <Label x:Name="title" Style="{StaticResource TitleBar}" Content="New Game" Grid.Row="0"/>
         <Grid x:Name="boardType" Margin="6" Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
@@ -26,14 +28,24 @@
             <Label x:Name="boardTypeTitle" Style="{StaticResource Label}" Background="{StaticResource HighlightBrush}" Content="Difficulty" Grid.Row="0" Grid.ColumnSpan="2"/>
             <Border BorderBrush="{StaticResource ShadowBrush}" BorderThickness="1" Margin="0,-1,0,0" Grid.Row="1" Grid.Column="0">
                 <StackPanel x:Name="boardTypeSelection">
-                    <RadioButton x:Name="beginnerButton" GroupName="boardType" Content="Beginner"/>
-                    <RadioButton x:Name="intermediateButton" GroupName="boardType" Content="Intermediate"/>
-                    <RadioButton x:Name="expertButton" GroupName="boardType" Content="Expert"/>
-                    <RadioButton x:Name="customButton" GroupName="boardType" Content="Custom"/>
+                    <RadioButton x:Name="beginnerButton" GroupName="boardType" Content="Beginner"
+                        IsChecked="{Binding Source={x:Static local:DifficultyModel.Instance}, Path=Difficulty, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static local:Difficulty.Beginner}}"
+                        />
+                    <RadioButton x:Name="intermediateButton" GroupName="boardType" Content="Intermediate"
+                        IsChecked="{Binding Source={x:Static local:DifficultyModel.Instance}, Path=Difficulty, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static local:Difficulty.Intermediate}}"
+                        />
+                    <RadioButton x:Name="expertButton" GroupName="boardType" Content="Expert"
+                        IsChecked="{Binding Source={x:Static local:DifficultyModel.Instance}, Path=Difficulty, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static local:Difficulty.Expert}}"
+                        />
+                    <RadioButton x:Name="customButton" GroupName="boardType" Content="Custom"
+                        IsChecked="{Binding Source={x:Static local:DifficultyModel.Instance}, Path=Difficulty, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static local:Difficulty.Custom}}"
+                        />
                 </StackPanel>
             </Border>
             <Border BorderBrush="{StaticResource ShadowBrush}" BorderThickness="1" Margin="-1,-1,0,0" Grid.Row="1" Grid.Column="1">
-                <Grid x:Name="boardSettings" IsEnabled="{Binding ElementName=customButton, Path=IsChecked}">
+                <Grid x:Name="boardSettings"
+                      IsEnabled="{Binding Source={x:Static local:DifficultyModel.Instance}, Path=Difficulty, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static local:Difficulty.Custom}}"
+                      >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
@@ -44,16 +56,28 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock x:Name="widthLabel" Text="Width:" FontSize="16" Margin="6,0,0,0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0"/>
-                    <TextBox x:Name="widthTextBox" Width="60" Height="28" Margin="6" Text="{Binding Source={x:Static prop:Settings.Default}, Path=Column}" Grid.Column="1" Grid.Row="0"/>
+                    <TextBox x:Name="widthTextBox" Width="50" Height="28" Margin="6"
+                             Text="{Binding Source={x:Static local:DifficultyModel.Instance}, Path=Columns}"
+                             Style="{StaticResource NumericTextBox}"
+                             Grid.Column="1" Grid.Row="0"
+                             />
                     <TextBlock x:Name="heightLabel" Text="Height:" FontSize="16" Margin="6,0,0,0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1"/>
-                    <TextBox x:Name="heightTextBox" Width="60" Height="28" Margin="6" Grid.Column="1" Grid.Row="1"/>
+                    <TextBox x:Name="heightTextBox" Width="50" Height="28" Margin="6"
+                             Text="{Binding Source={x:Static local:DifficultyModel.Instance}, Path=Rows}"
+                             Style="{StaticResource NumericTextBox}"
+                             Grid.Column="1" Grid.Row="1"
+                             />
                     <TextBlock x:Name="minesLabel" Text="Mines:" FontSize="16" Margin="6,0,0,0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2"/>
-                    <TextBox x:Name="minesTextBox" Width="60" Height="28" Margin="6" Grid.Column="1" Grid.Row="2"/>
+                    <TextBox x:Name="minesTextBox" Width="50" Height="28" Margin="6"
+                             Text="{Binding Source={x:Static local:DifficultyModel.Instance}, Path=Mines}"
+                             Style="{StaticResource NumericTextBox}"
+                             Grid.Column="1" Grid.Row="2"
+                             />
                 </Grid>
             </Border>
         </Grid>
         <DockPanel Margin="6,0,0,0" Grid.Row="2">
-            <local:Button x:Name="closeButton" Width="145" Height="40" Margin="0,6,6,6" Text="Start New Game" Click="closeButton_Click" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+            <local:Button x:Name="closeAndStartNewGameButton" Width="145" Height="40" Margin="0,6,6,6" Text="Start New Game" Click="closeAndStartNewGameButton_Click" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
             <local:Button x:Name="cancelButton" Width="145" Height="40" Margin="0,6,6,6" Text="Cancel" Click="cancelButton_Click" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
         </DockPanel>
     </Grid>

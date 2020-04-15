@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,11 +10,9 @@ namespace Minesweeper
     /// </summary>
     public partial class GameEndMessageWindow : Window
     {
-        private delegate void RestartDelegate();
+        private Action restartDelegate;
 
-        private RestartDelegate restartDelegate;
-
-        public GameEndMessageWindow(bool win, MainWindow window)
+        public GameEndMessageWindow(bool win, Action restartDelegate)
         {
             InitializeComponent();
 
@@ -31,7 +30,7 @@ namespace Minesweeper
 
             this.restartButton.Click += restartButton_Click;
 
-            this.restartDelegate = window.Reset;
+            this.restartDelegate = restartDelegate;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -81,7 +80,7 @@ namespace Minesweeper
             }
         }
 
-        private void gameEndMessageWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void gameEndMessageWindow_Closing(object sender, CancelEventArgs e)
         {
             // Prevents the player from closing the popup.
             e.Cancel = true;

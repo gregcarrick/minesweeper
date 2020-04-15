@@ -77,12 +77,6 @@ namespace Minesweeper
 
         public void Reset()
         {
-            // Put the settings back within allowed ranges if user has modified the settings file.
-            Settings.Default.Columns = Math.Max(8, Math.Min(64, Settings.Default.Columns));
-            Settings.Default.Rows = Math.Max(8, Math.Min(64, Settings.Default.Rows));
-            Settings.Default.Mines =
-                Math.Max(10, Math.Min(Math.Min(99, Settings.Default.Columns * Settings.Default.Rows - 8), Settings.Default.Mines));
-
             this.model = new Model();
             this.model.PropertyChanged += model_PropertyChanged;
             this.model.Reset(Settings.Default.Rows, Settings.Default.Columns, Settings.Default.Mines);
@@ -135,7 +129,7 @@ namespace Minesweeper
 
         private void ShowGameOverWindow(bool win)
         {
-            GameEndMessageWindow window = new GameEndMessageWindow(win, this);
+            GameEndMessageWindow window = new GameEndMessageWindow(win, new Action(() => Reset()));
             window.Owner = GetWindow(this); // Pop up over the centre of the main window
             window.Show();
             this.dockPanel.IsEnabled = false;
@@ -143,10 +137,9 @@ namespace Minesweeper
 
         private void newGameMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            NewGameSettingsWindow window = new NewGameSettingsWindow();
+            NewGameSettingsWindow window = new NewGameSettingsWindow(new Action(() => Reset()));
             window.Owner = GetWindow(this);
             window.Show();
-            // this.dockPanel.IsEnabled = false;
         }
     }
 }

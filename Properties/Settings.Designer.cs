@@ -58,5 +58,17 @@ namespace Minesweeper.Properties {
                 this["Mines"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Beginner")]
+        public global::Minesweeper.Difficulty Difficulty {
+            get {
+                return ((global::Minesweeper.Difficulty)(this["Difficulty"]));
+            }
+            set {
+                this["Difficulty"] = value;
+            }
+        }
     }
 }

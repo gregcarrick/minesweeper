@@ -11,5 +11,8 @@
     <Setting Name="Mines" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
+    <Setting Name="Difficulty" Type="Minesweeper.Difficulty" Scope="User">
+      <Value Profile="(Default)">Beginner</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

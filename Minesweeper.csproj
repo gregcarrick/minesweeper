@@ -60,6 +60,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Button.cs" />
+    <Compile Include="ComparisonConverter.cs" />
+    <Compile Include="Difficulty.cs" />
+    <Compile Include="DifficultyModel.cs" />
     <Compile Include="StaticResources.cs" />
     <Compile Include="NewGameSettingsWindow.xaml.cs">
       <DependentUpon>NewGameSettingsWindow.xaml</DependentUpon>

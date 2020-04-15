@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,9 +10,13 @@ namespace Minesweeper
     /// </summary>
     public partial class NewGameSettingsWindow : Window
     {
-        public NewGameSettingsWindow()
+        private Action restartDelegate;
+
+        public NewGameSettingsWindow(Action restartDelegate)
         {
             InitializeComponent();
+
+            this.restartDelegate = restartDelegate;
 
             this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
@@ -37,16 +42,17 @@ namespace Minesweeper
             }
         }
 
-        private void closeButton_Click(object sender, MouseEventArgs e)
-        {
-            this.Closing -= newGameSettingsWindow_Close;
-            Close();
-        }
-
         private void newGameSettingsWindow_Close(object sender, CancelEventArgs e)
         {
             // Prevents the player from closing the window.
             e.Cancel = true;
+        }
+
+        private void closeAndStartNewGameButton_Click(object sender, MouseEventArgs e)
+        {
+            this.Closing -= newGameSettingsWindow_Close;
+            this.restartDelegate.DynamicInvoke();
+            Close();
         }
 
         private void cancelButton_Click(object sender, MouseEventArgs e)
