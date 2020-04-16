@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,11 +10,9 @@ namespace Minesweeper
     /// </summary>
     public partial class GameEndMessageWindow : Window
     {
-        private delegate void RestartDelegate();
+        public event EventHandler RestartButtonClick;
 
-        private RestartDelegate restartDelegate;
-
-        public GameEndMessageWindow(bool win, MainWindow window)
+        public GameEndMessageWindow(bool win)
         {
             InitializeComponent();
 
@@ -30,41 +29,6 @@ namespace Minesweeper
             this.quitButton.Click += quitButton_Click;
 
             this.restartButton.Click += restartButton_Click;
-
-            this.restartDelegate = window.Reset;
-        }
-
-        private void gameEndMessageWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            // Prevents the player from closing the popup.
-            e.Cancel = true;
-        }
-
-        private void restartButton_Click(object sender, MouseEventArgs e)
-        {
-            Restart();
-        }
-
-        private void Restart()
-        {
-            if (this.restartDelegate != null)
-            {
-                this.restartDelegate.DynamicInvoke();
-            }
-
-            this.Closing -= gameEndMessageWindow_Closing;
-            Close();
-        }
-
-        private void quitButton_Click(object sender, MouseEventArgs e)
-        {
-            Quit();
-        }
-
-        private void Quit()
-        {
-            this.Closing -= gameEndMessageWindow_Closing;
-            Application.Current.Shutdown();
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -112,6 +76,35 @@ namespace Minesweeper
             {
                 this.Cursor = Cursors.Arrow;
             }
+        }
+
+        private void gameEndMessageWindow_Closing(object sender, CancelEventArgs e)
+        {
+            // Prevents the player from closing the popup.
+            e.Cancel = true;
+        }
+
+        private void restartButton_Click(object sender, MouseEventArgs e)
+        {
+            Restart();
+        }
+
+        private void Restart()
+        {
+            this.RestartButtonClick?.Invoke(this, new EventArgs());
+            this.Closing -= gameEndMessageWindow_Closing;
+            Close();
+        }
+
+        private void quitButton_Click(object sender, MouseEventArgs e)
+        {
+            Quit();
+        }
+
+        private void Quit()
+        {
+            this.Closing -= gameEndMessageWindow_Closing;
+            Application.Current.Shutdown();
         }
     }
 }
