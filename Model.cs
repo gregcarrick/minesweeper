@@ -20,7 +20,6 @@ namespace Minesweeper
         private Tuple<int, int> spareMineIndex;
         private GameState state;
         private Cell[,] mineField;
-        private DispatcherTimer timer;
         private int timerValue;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -98,31 +97,7 @@ namespace Minesweeper
 
             PlaceMines();
 
-            this.TimerValue = 0;
-            if (this.timer != null)
-            {
-                this.timer.Tick -= timer_Tick;
-            }
-            this.timer = new DispatcherTimer();
-            this.timer.Interval = new TimeSpan(0, 0, 1); // 1 second
-            this.timer.Tick += timer_Tick;
-
             this.State = GameState.Ready;
-        }
-
-        public void StopTimer()
-        {
-            this.timer.Stop();
-        }
-
-        public void RestartTimer()
-        {
-            this.timer.Start();
-        }
-
-        private void timer_Tick(object sender, EventArgs e)
-        {
-            this.TimerValue++;
         }
 
         private void PlaceMines()
@@ -229,8 +204,7 @@ namespace Minesweeper
 
                 if (this.state == GameState.Ready)
                 {
-                    this.state = GameState.Started;
-                    this.timer.Start();
+                    this.State = GameState.Started;
                 }
 
                 if (this.remainingCells == 0 && this.State == GameState.Started)
@@ -242,7 +216,6 @@ namespace Minesweeper
 
         private void Win()
         {
-            this.timer.Stop();
             for (int y = 0; y < this.rowCount; y++)
             {
                 for (int x = 0; x < this.columnCount; x++)
@@ -258,7 +231,6 @@ namespace Minesweeper
 
         private void Lose()
         {
-            this.timer.Stop();
             this.State = GameState.Lost;
         }
 

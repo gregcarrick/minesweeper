@@ -5,9 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Minesweeper"
         mc:Ignorable="d"
-        x:Name="mainWindow" Icon="{StaticResource MineImage}" Title="Minesweeper" ResizeMode="NoResize" SizeToContent="WidthAndHeight" Background="{StaticResource BgBrush}" FontFamily="Consolas">
+        x:Name="mainWindow" Icon="{StaticResource MineImage}" Title="Minesweeper" ResizeMode="NoResize" SizeToContent="WidthAndHeight"
+        Background="{StaticResource BgBrush}" FontFamily="Consolas">
     <DockPanel x:Name="dockPanel">
-        <Menu x:Name="menu" Background="{StaticResource HighlightBrush}" BorderBrush="{StaticResource ShadowBrush}" BorderThickness="1" FontFamily="Consolas" FontSize="14" DockPanel.Dock="Top">
+        <Menu x:Name="menu" Background="{StaticResource HighlightBrush}"
+              BorderBrush="{StaticResource ShadowBrush}" BorderThickness="1"
+              FontFamily="Consolas" FontSize="14" DockPanel.Dock="Top">
             <MenuItem x:Name="gameMenu" Header="Game">
                 <MenuItem x:Name="newGameMenuItem" Header="New Game..." Click="newGameMenuItem_Click" Background="{StaticResource HighlightBrush}"/>
             </MenuItem>

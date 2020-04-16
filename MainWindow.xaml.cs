@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace Minesweeper
 {
@@ -11,6 +12,7 @@ namespace Minesweeper
     public partial class MainWindow : Window
     {
         private Model model;
+        private DispatcherTimer timer;
 
         public MainWindow()
         {
@@ -56,8 +58,19 @@ namespace Minesweeper
             this.model = new Model();
             this.model.PropertyChanged += model_PropertyChanged;
             this.model.Reset(Settings.Default.Rows, Settings.Default.Columns, Settings.Default.Mines);
+
             this.boardView.Model = this.model;
             this.boardView.Reset(Settings.Default.Rows, Settings.Default.Columns);
+
+            this.TimerValue = 0;
+            if (this.timer != null)
+            {
+                this.timer.Tick -= timer_Tick;
+            }
+            this.timer = new DispatcherTimer();
+            this.timer.Interval = new TimeSpan(0, 0, 1); // 1 second
+            this.timer.Tick += timer_Tick;
+
             this.IsEnabled = true;
         }
 
@@ -75,6 +88,11 @@ namespace Minesweeper
             Reset();
         }
 
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            this.TimerValue++;
+        }
+
         private void model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -88,11 +106,14 @@ namespace Minesweeper
                 case "State":
                     switch (this.model.State)
                     {
+                        case GameState.Started:
+                            this.timer.Start();
+                            break;
                         case GameState.Lost:
-                            ShowGameOverWindow(false);
+                            EndGame(false);
                             break;
                         case GameState.Won:
-                            ShowGameOverWindow(true);
+                            EndGame(true);
                             break;
                         default:
                             break;
@@ -103,13 +124,14 @@ namespace Minesweeper
             }
         }
 
-        private void ShowGameOverWindow(bool win)
+        private void EndGame(bool win)
         {
             GameEndMessageWindow window = new GameEndMessageWindow(win);
             window.RestartButtonClick += window_RestartButtonClick;
             window.Owner = GetWindow(this); // Pop up over the centre of the main window
             window.Show();
 
+            this.timer.Stop();
             this.IsEnabled = false;
         }
 
@@ -126,7 +148,7 @@ namespace Minesweeper
             window.Owner = GetWindow(this);
             window.Show();
 
-            this.model.StopTimer();
+            this.timer.Stop();
             this.IsEnabled = false;
         }
 
@@ -137,7 +159,7 @@ namespace Minesweeper
 
         private void window_CancelButtonClick(object sender, EventArgs e)
         {
-            this.model.RestartTimer();
+            this.timer.Start();
             this.IsEnabled = true;
         }
     }
