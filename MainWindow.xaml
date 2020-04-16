@@ -13,7 +13,7 @@
             </MenuItem>
         </Menu>
         <DockPanel x:Name="controlPanel" DockPanel.Dock="Top" LastChildFill="True">
-            <local:Counter x:Name="timer" DockPanel.Dock="Left" Value="{Binding ElementName=mainWindow, Path=TimerValue}"/>
+            <local:Counter x:Name="timerCounter" DockPanel.Dock="Left" Value="{Binding ElementName=mainWindow, Path=TimerValue}"/>
             <local:Counter x:Name="minesCounter" DockPanel.Dock="Right" Value="{Binding ElementName=mainWindow, Path=RemainingMines}"/>
             <local:Button x:Name="newGameButton" Height="34" Width="78" Text="New Game" Click="newGameButton_Click"/>
         </DockPanel>

@@ -10,9 +10,9 @@ namespace Minesweeper
     /// </summary>
     public partial class GameEndMessageWindow : Window
     {
-        private Action restartDelegate;
+        public event EventHandler RestartButtonClick;
 
-        public GameEndMessageWindow(bool win, Action restartDelegate)
+        public GameEndMessageWindow(bool win)
         {
             InitializeComponent();
 
@@ -29,8 +29,6 @@ namespace Minesweeper
             this.quitButton.Click += quitButton_Click;
 
             this.restartButton.Click += restartButton_Click;
-
-            this.restartDelegate = restartDelegate;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -93,11 +91,7 @@ namespace Minesweeper
 
         private void Restart()
         {
-            if (this.restartDelegate != null)
-            {
-                this.restartDelegate.DynamicInvoke();
-            }
-
+            this.RestartButtonClick?.Invoke(this, new EventArgs());
             this.Closing -= gameEndMessageWindow_Closing;
             Close();
         }

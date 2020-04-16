@@ -11,20 +11,14 @@ namespace Minesweeper
     /// </summary>
     public partial class NewGameSettingsWindow : Window
     {
-        private Action restartDelegate;
-        (int columns, int rows, int mines, Difficulty difficulty) cachedSettings;
+        public event EventHandler NewGameButtonClick;
+        public event EventHandler CancelButtonClick;
 
-        public NewGameSettingsWindow(Action restartDelegate)
+        public NewGameSettingsWindow()
         {
             InitializeComponent();
 
-            this.cachedSettings = (
-                DifficultyModel.Instance.Columns,
-                DifficultyModel.Instance.Rows,
-                DifficultyModel.Instance.Mines,
-                DifficultyModel.Instance.Difficulty);
-
-            this.restartDelegate = restartDelegate;
+            DifficultyModel.Instance.StartSession(this);
 
             this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
@@ -58,19 +52,16 @@ namespace Minesweeper
 
         private void closeAndStartNewGameButton_Click(object sender, MouseEventArgs e)
         {
+            DifficultyModel.Instance.EndSession(this);
+            this.NewGameButtonClick?.Invoke(this, new EventArgs());
             this.Closing -= newGameSettingsWindow_Close;
-            this.restartDelegate.DynamicInvoke();
             Close();
         }
 
         private void cancelButton_Click(object sender, MouseEventArgs e)
         {
+            this.CancelButtonClick?.Invoke(this, new EventArgs());
             this.Closing -= newGameSettingsWindow_Close;
-            // Put settings back to their previous values.
-            DifficultyModel.Instance.Columns = this.cachedSettings.columns;
-            DifficultyModel.Instance.Rows = this.cachedSettings.rows;
-            DifficultyModel.Instance.Mines = this.cachedSettings.mines;
-            DifficultyModel.Instance.Difficulty = this.cachedSettings.difficulty;
             Close();
         }
     }

@@ -58,7 +58,7 @@ namespace Minesweeper
             this.model.Reset(Settings.Default.Rows, Settings.Default.Columns, Settings.Default.Mines);
             this.boardView.Model = this.model;
             this.boardView.Reset(Settings.Default.Rows, Settings.Default.Columns);
-            this.dockPanel.IsEnabled = true;
+            this.IsEnabled = true;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -105,17 +105,40 @@ namespace Minesweeper
 
         private void ShowGameOverWindow(bool win)
         {
-            GameEndMessageWindow window = new GameEndMessageWindow(win, new Action(() => Reset()));
+            GameEndMessageWindow window = new GameEndMessageWindow(win);
+            window.RestartButtonClick += window_RestartButtonClick;
             window.Owner = GetWindow(this); // Pop up over the centre of the main window
             window.Show();
-            this.dockPanel.IsEnabled = false;
+
+            this.IsEnabled = false;
+        }
+
+        private void window_RestartButtonClick(object sender, EventArgs e)
+        {
+            Reset();
         }
 
         private void newGameMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            NewGameSettingsWindow window = new NewGameSettingsWindow(new Action(() => Reset()));
+            NewGameSettingsWindow window = new NewGameSettingsWindow();
+            window.CancelButtonClick += window_CancelButtonClick;
+            window.NewGameButtonClick += window_NewGameButtonClick;
             window.Owner = GetWindow(this);
             window.Show();
+
+            this.model.StopTimer();
+            this.IsEnabled = false;
+        }
+
+        private void window_NewGameButtonClick(object sender, EventArgs e)
+        {
+            Reset();
+        }
+
+        private void window_CancelButtonClick(object sender, EventArgs e)
+        {
+            this.model.RestartTimer();
+            this.IsEnabled = true;
         }
     }
 }

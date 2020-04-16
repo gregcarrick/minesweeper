@@ -110,6 +110,16 @@ namespace Minesweeper
             this.State = GameState.Ready;
         }
 
+        public void StopTimer()
+        {
+            this.timer.Stop();
+        }
+
+        public void RestartTimer()
+        {
+            this.timer.Start();
+        }
+
         private void timer_Tick(object sender, EventArgs e)
         {
             this.TimerValue++;

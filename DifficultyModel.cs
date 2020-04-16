@@ -2,31 +2,41 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace Minesweeper
 {
     /// <summary>
-    /// Provides a singleton interface for interacting with the game difficulty settings.
+    /// Provides a singleton interface that windows can use to interact with the
+    /// game difficulty settings.
     /// </summary>
     public class DifficultyModel : INotifyPropertyChanged
     {
+        private Window window;
+        private int columns;
+        private int rows;
+        private int mines;
+        private Difficulty difficulty;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private DifficultyModel() { }
 
         public static DifficultyModel Instance { get; } = new DifficultyModel();
 
+        public bool IsActiveSession { get; private set; }
+
         public Difficulty Difficulty
         {
             get
             {
-                return Settings.Default.Difficulty;
+                return this.difficulty;
             }
             set
             {
-                if (value != Settings.Default.Difficulty)
+                if (value != this.difficulty)
                 {
-                    Settings.Default.Difficulty = value;
+                    this.difficulty = value;
                     if (value != Difficulty.Custom)
                     {
                         this.Columns = value switch
@@ -64,13 +74,13 @@ namespace Minesweeper
         {
             get
             {
-                return Settings.Default.Columns;
+                return this.columns;
             }
             set
             {
-                if (value != Settings.Default.Columns)
+                if (value != this.columns)
                 {
-                    Settings.Default.Columns = Math.Max(8, Math.Min(30, value));
+                    this.columns = Math.Max(8, Math.Min(30, value));
                     this.Mines = Math.Min((this.Columns - 1) * (this.Rows - 1), this.Mines);
 
                     NotifyPropertyChanged();
@@ -85,13 +95,13 @@ namespace Minesweeper
         {
             get
             {
-                return Settings.Default.Rows;
+                return this.rows;
             }
             set
             {
-                if (value != Settings.Default.Rows)
+                if (value != this.rows)
                 {
-                    Settings.Default.Rows = Math.Max(8, Math.Min(30, value));
+                    this.rows = Math.Max(8, Math.Min(30, value));
                     this.Mines = Math.Min((this.Columns - 1) * (this.Rows - 1), this.Mines);
 
                     NotifyPropertyChanged();
@@ -106,13 +116,13 @@ namespace Minesweeper
         {
             get
             {
-                return Settings.Default.Mines;
+                return this.mines;
             }
             set
             {
-                if (value != Settings.Default.Mines)
+                if (value != this.mines)
                 {
-                    Settings.Default.Mines =
+                    this.mines =
                         Math.Max(10, Math.Min((this.Columns - 1) * (this.Rows - 1), value));
 
                     NotifyPropertyChanged();
@@ -120,11 +130,54 @@ namespace Minesweeper
             }
         }
 
+        /// <summary>
+        /// Reads the settings to start a settings session for a window.
+        /// </summary>
+        /// <remarks>
+        /// The same window must call <see cref="EndSession(Window)"/> in order
+        /// to write the settings values.
+        /// </remarks>
+        public void StartSession(Window window)
+        {
+            if (this.window == null)
+            {
+                this.window = window;
+                this.window.Closed += window_Closed;
+                this.Columns = Settings.Default.Columns;
+                this.Rows = Settings.Default.Rows;
+                this.Mines = Settings.Default.Mines;
+                this.Difficulty = Settings.Default.Difficulty;
+            }
+        }
+
+        /// <summary>
+        /// Ends the active session by writing the settings.
+        /// </summary>
+        /// <param name="window"></param>
+        public void EndSession(Window window)
+        {
+            if (window.GetHashCode() == this.window.GetHashCode())
+            {
+                Settings.Default.Columns = this.Columns;
+                Settings.Default.Rows = this.Rows;
+                Settings.Default.Mines = this.Mines;
+                Settings.Default.Difficulty = this.Difficulty;
+                this.window.Closed -= window_Closed;
+                this.window = null;
+            }
+        }
+
+        /// <summary>
+        /// Makes sure this.window is set to null.
+        /// </summary>
+        private void window_Closed(object sender, EventArgs e)
+        {
+            this.window = null;
+        }
+
         private void NotifyPropertyChanged([CallerMemberName] string name = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-
-        private bool IsCustom => this.Difficulty == Difficulty.Custom;
     }
 }
