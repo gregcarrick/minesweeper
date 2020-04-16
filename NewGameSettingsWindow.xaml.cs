@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Minesweeper.Properties;
+using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
@@ -11,10 +12,17 @@ namespace Minesweeper
     public partial class NewGameSettingsWindow : Window
     {
         private Action restartDelegate;
+        (int columns, int rows, int mines, Difficulty difficulty) cachedSettings;
 
         public NewGameSettingsWindow(Action restartDelegate)
         {
             InitializeComponent();
+
+            this.cachedSettings = (
+                DifficultyModel.Instance.Columns,
+                DifficultyModel.Instance.Rows,
+                DifficultyModel.Instance.Mines,
+                DifficultyModel.Instance.Difficulty);
 
             this.restartDelegate = restartDelegate;
 
@@ -58,6 +66,11 @@ namespace Minesweeper
         private void cancelButton_Click(object sender, MouseEventArgs e)
         {
             this.Closing -= newGameSettingsWindow_Close;
+            // Put settings back to their previous values.
+            DifficultyModel.Instance.Columns = this.cachedSettings.columns;
+            DifficultyModel.Instance.Rows = this.cachedSettings.rows;
+            DifficultyModel.Instance.Mines = this.cachedSettings.mines;
+            DifficultyModel.Instance.Difficulty = this.cachedSettings.difficulty;
             Close();
         }
     }

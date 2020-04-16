@@ -21,30 +21,6 @@ namespace Minesweeper
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
-        public int RowCount
-        {
-            get
-            {
-                return 8;
-            }
-        }
-
-        public int ColumnCount
-        {
-            get
-            {
-                return 8;
-            }
-        }
-
-        public int Mines
-        {
-            get
-            {
-                return 10;
-            }
-        }
-
         public static readonly DependencyProperty TimerValueProperty =
             DependencyProperty.Register("TimerValue", typeof(int), typeof(MainWindow),
                 new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.None));
