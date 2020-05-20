@@ -162,6 +162,7 @@ namespace Minesweeper
                 Settings.Default.Rows = this.Rows;
                 Settings.Default.Mines = this.Mines;
                 Settings.Default.Difficulty = this.Difficulty;
+                Settings.Default.Save();
                 this.window.Closed -= window_Closed;
                 this.window = null;
             }
