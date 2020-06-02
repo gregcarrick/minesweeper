@@ -63,6 +63,8 @@
     <Compile Include="ComparisonConverter.cs" />
     <Compile Include="Difficulty.cs" />
     <Compile Include="DifficultyModel.cs" />
+    <Compile Include="PlayerStatsItem.cs" />
+    <Compile Include="PlayerStatsModel.cs" />
     <Compile Include="StaticResources.cs" />
     <Compile Include="NewGameSettingsWindow.xaml.cs">
       <DependentUpon>NewGameSettingsWindow.xaml</DependentUpon>

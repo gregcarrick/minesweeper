@@ -1,7 +1,7 @@
-﻿using Minesweeper.Properties;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace Minesweeper
@@ -12,7 +12,6 @@ namespace Minesweeper
     public partial class MainWindow : Window
     {
         private Model model;
-        private DispatcherTimer timer;
 
         public MainWindow()
         {
@@ -57,19 +56,10 @@ namespace Minesweeper
         {
             this.model = new Model();
             this.model.PropertyChanged += model_PropertyChanged;
-            this.model.Reset(Settings.Default.Rows, Settings.Default.Columns, Settings.Default.Mines);
+            this.model.Reset();
 
             this.boardView.Model = this.model;
-            this.boardView.Reset(Settings.Default.Rows, Settings.Default.Columns);
-
-            this.TimerValue = 0;
-            if (this.timer != null)
-            {
-                this.timer.Tick -= timer_Tick;
-            }
-            this.timer = new DispatcherTimer();
-            this.timer.Interval = new TimeSpan(0, 0, 1); // 1 second
-            this.timer.Tick += timer_Tick;
+            this.boardView.Reset();
 
             this.IsEnabled = true;
         }
@@ -83,17 +73,19 @@ namespace Minesweeper
             base.OnClosing(e);
         }
 
-        private void newGameButton_Click(object sender, System.Windows.Input.MouseEventArgs e)
+        private void newGameButton_Click(object sender, MouseEventArgs e)
         {
             Reset();
         }
 
-        private void timer_Tick(object sender, EventArgs e)
+        private void statsMenuItem_Click(object sender, MouseEventArgs e)
         {
-            this.TimerValue++;
+            var window = new PlayerStatsWindow();
+            window.Owner = GetWindow(this);
+            window.Show();
         }
 
-        private void model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void model_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
@@ -106,9 +98,6 @@ namespace Minesweeper
                 case "State":
                     switch (this.model.State)
                     {
-                        case GameState.Started:
-                            this.timer.Start();
-                            break;
                         case GameState.Lost:
                             EndGame(false);
                             break;
@@ -124,6 +113,9 @@ namespace Minesweeper
             }
         }
 
+        /// <summary>
+        /// Called when the model's game state changes to Lost or Won.
+        /// </summary>
         private void EndGame(bool win)
         {
             GameEndMessageWindow window = new GameEndMessageWindow(win);
@@ -131,7 +123,6 @@ namespace Minesweeper
             window.Owner = GetWindow(this); // Pop up over the centre of the main window
             window.Show();
 
-            this.timer.Stop();
             this.IsEnabled = false;
         }
 
@@ -148,7 +139,7 @@ namespace Minesweeper
             window.Owner = GetWindow(this);
             window.Show();
 
-            this.timer.Stop();
+            this.model.StopTimer();
             this.IsEnabled = false;
         }
 
@@ -159,8 +150,13 @@ namespace Minesweeper
 
         private void window_CancelButtonClick(object sender, EventArgs e)
         {
-            this.timer.Start();
+            this.model.StartTimer();
             this.IsEnabled = true;
+        }
+
+        private void statsMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

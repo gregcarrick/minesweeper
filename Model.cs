@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Minesweeper.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Minesweeper
     /// </summary>
     public class Model : INotifyPropertyChanged
     {
+        private Difficulty difficulty;
         private int rowCount;
         private int columnCount;
         private int mines;
@@ -20,6 +22,7 @@ namespace Minesweeper
         private Tuple<int, int> spareMineIndex;
         private GameState state;
         private Cell[,] mineField;
+        private DispatcherTimer timer;
         private int timerValue;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -87,15 +90,26 @@ namespace Minesweeper
             }
         }
 
-        public void Reset(int rowCount, int columnCount, int totalMines)
+        public void Reset()
         {
-            this.rowCount = rowCount;
-            this.columnCount = columnCount;
+            this.difficulty = Settings.Default.Difficulty;
+            this.rowCount = Settings.Default.Rows;
+            this.columnCount = Settings.Default.Columns;
+            int totalMines = Settings.Default.Mines;
             this.mines = totalMines;
             this.RemainingMines = totalMines;
             this.remainingCells = rowCount * columnCount - totalMines;
 
             PlaceMines();
+
+            this.TimerValue = 0;
+            if (this.timer != null)
+            {
+                this.timer.Tick -= timer_Tick;
+            }
+            this.timer = new DispatcherTimer();
+            this.timer.Interval = new TimeSpan(0, 0, 1); // 1 second
+            this.timer.Tick += timer_Tick;
 
             this.State = GameState.Ready;
         }
@@ -205,12 +219,29 @@ namespace Minesweeper
                 if (this.state == GameState.Ready)
                 {
                     this.State = GameState.Started;
+                    this.timer.Start();
                 }
 
                 if (this.remainingCells == 0 && this.State == GameState.Started)
                 {
                     this.Win();
                 }
+            }
+        }
+
+        public void StartTimer()
+        {
+            if (this.timer != null)
+            {
+                this.timer.Start();
+            }
+        }
+
+        public void StopTimer()
+        {
+            if (this.timer != null)
+            {
+                this.timer.Stop();
             }
         }
 
@@ -227,11 +258,15 @@ namespace Minesweeper
                 }
             }
             this.State = GameState.Won;
+            this.timer.Stop();
+            PlayerStatsModel.Instance.RecordWin(this.difficulty, this.TimerValue);
         }
 
         private void Lose()
         {
             this.State = GameState.Lost;
+            this.timer.Stop();
+            PlayerStatsModel.Instance.RecordLoss(this.difficulty, this.TimerValue);
         }
 
         /// <summary>
@@ -258,6 +293,11 @@ namespace Minesweeper
         private void NotifyPropertyChanged([CallerMemberName] string name = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            this.TimerValue++;
         }
     }
 }
