@@ -13,7 +13,7 @@
               FontFamily="Consolas" FontSize="14" DockPanel.Dock="Top">
             <MenuItem x:Name="gameMenu" Header="Game">
                 <MenuItem x:Name="newGameMenuItem" Header="New Game..." Click="newGameMenuItem_Click" Background="{StaticResource HighlightBrush}"/>
-                <!--MenuItem x:Name="statsMenuItem" Header="Statistics" Click="statsMenuItem_Click" Background="{StaticResource HighlightBrush}"/-->
+                <MenuItem x:Name="statsMenuItem" Header="Statistics..." Click="statsMenuItem_Click" Background="{StaticResource HighlightBrush}"/>
             </MenuItem>
         </Menu>
         <DockPanel x:Name="controlPanel" DockPanel.Dock="Top" LastChildFill="True">

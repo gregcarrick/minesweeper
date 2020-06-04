@@ -49,8 +49,11 @@ namespace Minesweeper
             if (win)
             {
                 item.Wins++;
-                if (item.Fastest == null || item.Fastest > time)
+                if (difficulty != Difficulty.Custom &&
+                    (item.Fastest == null || item.Fastest > time))
                 {
+                    // Custom games are not comparable to one another so don't
+                    // record the fastest time for that difficulty setting.
                     item.Fastest = time;
                     item.Date = DateTime.Now.ToUniversalTime();
                 }

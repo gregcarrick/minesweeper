@@ -78,13 +78,6 @@ namespace Minesweeper
             Reset();
         }
 
-        private void statsMenuItem_Click(object sender, MouseEventArgs e)
-        {
-            //var window = new PlayerStatsWindow();
-            //window.Owner = GetWindow(this);
-            //window.Show();
-        }
-
         private void model_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -143,6 +136,17 @@ namespace Minesweeper
             this.IsEnabled = false;
         }
 
+        private void statsMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new PlayerStatsWindow();
+            window.CloseButtonClick += window_CancelButtonClick;
+            window.Owner = GetWindow(this);
+            window.Show();
+
+            this.model.StopTimer();
+            this.IsEnabled = false;
+        }
+
         private void window_NewGameButtonClick(object sender, EventArgs e)
         {
             Reset();
@@ -152,11 +156,6 @@ namespace Minesweeper
         {
             this.model.StartTimer();
             this.IsEnabled = true;
-        }
-
-        private void statsMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
