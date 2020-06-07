@@ -22,7 +22,6 @@ namespace Minesweeper
         private Tuple<int, int> spareMineIndex;
         private GameState state;
         private Cell[,] mineField;
-        private DispatcherTimer timer;
         private int timerValue;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -101,15 +100,6 @@ namespace Minesweeper
             this.remainingCells = rowCount * columnCount - totalMines;
 
             PlaceMines();
-
-            this.TimerValue = 0;
-            if (this.timer != null)
-            {
-                this.timer.Tick -= timer_Tick;
-            }
-            this.timer = new DispatcherTimer();
-            this.timer.Interval = new TimeSpan(0, 0, 1); // 1 second
-            this.timer.Tick += timer_Tick;
 
             this.State = GameState.Ready;
         }
