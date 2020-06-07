@@ -229,14 +229,22 @@ namespace Minesweeper
             }
         }
 
+        /// <summary>
+        /// Starts or restarts the timer if the game has been paused when it is
+        /// in the Started state.
+        /// </summary>
         public void StartTimer()
         {
-            if (this.timer != null)
+            if (this.timer != null && this.State == GameState.Started)
             {
                 this.timer.Start();
             }
         }
 
+        /// <summary>
+        /// Stops the timer. Allows the game to be paused from the main window
+        /// class, e.g. when a pop up window is invoked.
+        /// </summary>
         public void StopTimer()
         {
             if (this.timer != null)

@@ -51,6 +51,18 @@ namespace Minesweeper
             }
         }
 
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Escape:
+                    CloseWindow();
+                    break;
+            }
+
+            base.OnKeyDown(e);
+        }
+
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
@@ -117,8 +129,13 @@ namespace Minesweeper
 
         private void closeButton_Click(object sender, MouseEventArgs e)
         {
+            CloseWindow();
+        }
+
+        private void CloseWindow()
+        {
             this.Closing -= playerStatsWindow_Closing;
-            this.Close();
+            Close();
         }
     }
 }

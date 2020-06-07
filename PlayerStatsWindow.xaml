@@ -44,7 +44,7 @@
             </Grid>
         </Border>
         <DockPanel Margin="6,0,0,0" Grid.Row="2">
-            <local:Button x:Name="closeButton" Width="145" Height="40" Margin="0,6,6,6" Text="Close" Click="closeButton_Click" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+            <local:Button x:Name="closeButton" Width="145" Height="40" Margin="0,6,6,6" Text="Close (Esc)" Click="closeButton_Click" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
         </DockPanel>
     </Grid>
 </Window>
