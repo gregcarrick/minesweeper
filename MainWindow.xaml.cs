@@ -127,7 +127,7 @@ namespace Minesweeper
         private void newGameMenuItem_Click(object sender, RoutedEventArgs e)
         {
             NewGameSettingsWindow window = new NewGameSettingsWindow();
-            window.CancelButtonClick += window_CancelButtonClick;
+            window.CancelButtonClick += window_Closing;
             window.NewGameButtonClick += window_NewGameButtonClick;
             window.Owner = GetWindow(this);
             window.Show();
@@ -139,7 +139,7 @@ namespace Minesweeper
         private void statsMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var window = new PlayerStatsWindow();
-            window.CloseButtonClick += window_CancelButtonClick;
+            window.Closing += window_Closing;
             window.Owner = GetWindow(this);
             window.Show();
 
@@ -152,7 +152,7 @@ namespace Minesweeper
             Reset();
         }
 
-        private void window_CancelButtonClick(object sender, EventArgs e)
+        private void window_Closing(object sender, EventArgs e)
         {
             this.model.StartTimer();
             this.IsEnabled = true;

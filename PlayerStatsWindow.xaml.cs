@@ -12,8 +12,6 @@ namespace Minesweeper
     /// </summary>
     public partial class PlayerStatsWindow : Window
     {
-        public event EventHandler CloseButtonClick;
-
         public PlayerStatsWindow()
         {
             InitializeComponent();
@@ -119,7 +117,6 @@ namespace Minesweeper
 
         private void closeButton_Click(object sender, MouseEventArgs e)
         {
-            this.CloseButtonClick?.Invoke(this, new EventArgs());
             this.Closing -= playerStatsWindow_Closing;
             this.Close();
         }

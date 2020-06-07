@@ -1,5 +1,4 @@
-﻿using Minesweeper.Properties;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
