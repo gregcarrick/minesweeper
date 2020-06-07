@@ -93,9 +93,6 @@ namespace Minesweeper
             this.Width = this.columnCount * cellSize;
             this.Height = this.rowCount * cellSize;
 
-            this.Width = this.columnCount * cellSize;
-            this.Height = this.rowCount * cellSize;
-
             if (this.boardVisual != null)
             {
                 DrawBoard();
