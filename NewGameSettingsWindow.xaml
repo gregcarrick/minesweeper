@@ -77,8 +77,8 @@
             </Border>
         </Grid>
         <DockPanel Margin="6,0,0,0" Grid.Row="2">
-            <local:Button x:Name="closeAndStartNewGameButton" Width="145" Height="40" Margin="0,6,6,6" Text="Start New Game" Click="closeAndStartNewGameButton_Click" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
-            <local:Button x:Name="cancelButton" Width="145" Height="40" Margin="0,6,6,6" Text="Cancel" Click="cancelButton_Click" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+            <local:Button x:Name="closeAndStartNewGameButton" Width="145" Height="40" Margin="0,6,6,6" Text="Start Game (↵)" Click="closeAndStartNewGameButton_Click" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+            <local:Button x:Name="cancelButton" Width="145" Height="40" Margin="0,6,6,6" Text="Cancel (Esc)" Click="cancelButton_Click" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
         </DockPanel>
     </Grid>
 </Window>
