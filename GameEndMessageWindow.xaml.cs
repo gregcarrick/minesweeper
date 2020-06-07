@@ -25,10 +25,6 @@ namespace Minesweeper
                 "Game Over :(";
 
             this.text.Content = string.Format("You've {0} the game.\r\n\r\nPlay again?", win ? "won" : "lost");
-
-            this.quitButton.Click += quitButton_Click;
-
-            this.restartButton.Click += restartButton_Click;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -105,6 +101,20 @@ namespace Minesweeper
         {
             this.Closing -= gameEndMessageWindow_Closing;
             Application.Current.Shutdown();
+        }
+
+        private void showStatsButton_Click(object sender, MouseEventArgs e)
+        {
+            var window = new PlayerStatsWindow();
+            window.Owner = this;
+            window.Closing += window_Closing;
+            window.Show();
+            this.IsEnabled = false;
+        }
+
+        private void window_Closing(object sender, CancelEventArgs e)
+        {
+            this.IsEnabled = true;
         }
     }
 }

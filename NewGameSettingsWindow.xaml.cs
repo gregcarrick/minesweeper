@@ -1,4 +1,3 @@
-﻿using Minesweeper.Properties;
 using System;
 using System.ComponentModel;
 using System.Windows;
@@ -22,7 +21,7 @@ namespace Minesweeper
 
             this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
-            this.Closing += newGameSettingsWindow_Close;
+            this.Closing += newGameSettingsWindow_Closing;
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -44,7 +43,7 @@ namespace Minesweeper
             }
         }
 
-        private void newGameSettingsWindow_Close(object sender, CancelEventArgs e)
+        private void newGameSettingsWindow_Closing(object sender, CancelEventArgs e)
         {
             // Prevents the player from closing the window.
             e.Cancel = true;
@@ -54,14 +53,14 @@ namespace Minesweeper
         {
             DifficultyModel.Instance.EndSession(this);
             this.NewGameButtonClick?.Invoke(this, new EventArgs());
-            this.Closing -= newGameSettingsWindow_Close;
+            this.Closing -= newGameSettingsWindow_Closing;
             Close();
         }
 
         private void cancelButton_Click(object sender, MouseEventArgs e)
         {
             this.CancelButtonClick?.Invoke(this, new EventArgs());
-            this.Closing -= newGameSettingsWindow_Close;
+            this.Closing -= newGameSettingsWindow_Closing;
             Close();
         }
     }

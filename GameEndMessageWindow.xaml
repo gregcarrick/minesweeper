@@ -14,9 +14,10 @@
         <Label x:Name="title" VerticalAlignment="Top" Style="{StaticResource TitleBar}" Grid.Row="0"/>
         <Label x:Name="text" Height="72" VerticalAlignment="Top" Margin="0,-1,0,0" Style="{StaticResource Label}" Grid.Row="1"/>
         <Border x:Name="dockPanelBorder" Margin="0,-2,0,0" BorderBrush="{StaticResource ShadowBrush}" BorderThickness="1" Grid.Row="2">
-            <DockPanel Width="308" Height="52">
-                <local:Button x:Name="restartButton" Width="145" Height="40" DockPanel.Dock="Left" Margin="6,6,3,6" Text="Play again"/>
-                <local:Button x:Name="quitButton" Width="145" Height="40" DockPanel.Dock="Right" Margin="3,6,6,6" Text="Quit"/>
+            <DockPanel Width="459" Height="52">
+                <local:Button x:Name="restartButton" Width="145" Height="40" DockPanel.Dock="Left" Margin="6,6,6,6" Text="Play again (↵)" Click="restartButton_Click"/>
+                <local:Button x:Name="showStatsButton" Width="145" Height="40" DockPanel.Dock="Left" Margin="0,6,6,6" Text="Statistics..." Click="showStatsButton_Click"/>
+                <local:Button x:Name="quitButton" Width="145" Height="40" DockPanel.Dock="Right" Margin="0,6,6,6" Text="Quit (Esc)" Click="quitButton_Click"/>
             </DockPanel>
         </Border>
     </Grid>

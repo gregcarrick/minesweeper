@@ -12,6 +12,7 @@ namespace Minesweeper
     /// </summary>
     public class DifficultyModel : INotifyPropertyChanged
     {
+        private bool isSessionActive;
         private Window window;
         private int columns;
         private int rows;
@@ -133,14 +134,15 @@ namespace Minesweeper
         /// <summary>
         /// Reads the settings to start a settings session for a window.
         /// </summary>
-        /// <remarks>
-        /// The same window must call <see cref="EndSession(Window)"/> in order
-        /// to write the settings values.
-        /// </remarks>
+        /// <param name="window">The window calling StartSession. The same window
+        /// must call <see cref="EndSession(Window)"/> in order to write the
+        /// settings values.
+        /// </param>
         public void StartSession(Window window)
         {
-            if (this.window == null)
+            if (!this.isSessionActive && this.window == null)
             {
+                this.isSessionActive = true;
                 this.window = window;
                 this.window.Closed += window_Closed;
                 this.Columns = Settings.Default.Columns;
@@ -153,7 +155,9 @@ namespace Minesweeper
         /// <summary>
         /// Ends the active session by writing the settings.
         /// </summary>
-        /// <param name="window"></param>
+        /// <param name="window">The window calling EndSession. Must be the same
+        /// window that previously called <see cref="StartSession(Window)"/>
+        /// </param>
         public void EndSession(Window window)
         {
             if (window.GetHashCode() == this.window.GetHashCode())
@@ -162,16 +166,19 @@ namespace Minesweeper
                 Settings.Default.Rows = this.Rows;
                 Settings.Default.Mines = this.Mines;
                 Settings.Default.Difficulty = this.Difficulty;
+                Settings.Default.Save();
                 this.window.Closed -= window_Closed;
                 this.window = null;
+                this.isSessionActive = false;
             }
         }
 
         /// <summary>
-        /// Makes sure this.window is set to null.
+        /// Makes sure any active session is ended and this.window is set to null.
         /// </summary>
         private void window_Closed(object sender, EventArgs e)
         {
+            this.isSessionActive = false;
             this.window = null;
         }
 

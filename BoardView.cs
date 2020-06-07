@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Minesweeper.Properties;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -84,10 +85,13 @@ namespace Minesweeper
 
         protected override int VisualChildrenCount => this.visuals.Count;
 
-        public void Reset(int rowCount, int columnCount)
+        public void Reset()
         {
-            this.rowCount = rowCount;
-            this.columnCount = columnCount;
+            this.rowCount = Settings.Default.Rows;
+            this.columnCount = Settings.Default.Columns;
+
+            this.Width = this.columnCount * cellSize;
+            this.Height = this.rowCount * cellSize;
 
             this.Width = this.columnCount * cellSize;
             this.Height = this.rowCount * cellSize;

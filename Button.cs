@@ -190,7 +190,7 @@ namespace Minesweeper
             using var hv = this.hoverVisual.RenderOpen();
             Brush brush = StaticResources.MouseOverBrush;
             hv.DrawRectangle(brush, null, this.GetRect());
-            this.Click.Invoke(this, e);
+            this.Click?.Invoke(this, e);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
