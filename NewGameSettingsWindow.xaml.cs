@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
@@ -22,6 +22,21 @@ namespace Minesweeper
             this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             this.Closing += newGameSettingsWindow_Closing;
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Enter:
+                    StartGame();
+                    break;
+                case Key.Escape:
+                    Cancel();
+                    break;
+            }
+
+            base.OnKeyDown(e);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -51,6 +66,11 @@ namespace Minesweeper
 
         private void closeAndStartNewGameButton_Click(object sender, MouseEventArgs e)
         {
+            StartGame();
+        }
+
+        private void StartGame()
+        {
             DifficultyModel.Instance.EndSession(this);
             this.NewGameButtonClick?.Invoke(this, new EventArgs());
             this.Closing -= newGameSettingsWindow_Closing;
@@ -58,6 +78,11 @@ namespace Minesweeper
         }
 
         private void cancelButton_Click(object sender, MouseEventArgs e)
+        {
+            Cancel();
+        }
+
+        private void Cancel()
         {
             this.CancelButtonClick?.Invoke(this, new EventArgs());
             this.Closing -= newGameSettingsWindow_Closing;
