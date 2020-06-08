@@ -9,9 +9,9 @@ using System.Windows.Threading;
 namespace Minesweeper
 {
     /// <summary>
-    /// Model containing the game state.
+    /// Models the game state.
     /// </summary>
-    public class Model : INotifyPropertyChanged
+    public class GameModel : INotifyPropertyChanged
     {
         private Difficulty difficulty;
         private int rowCount;
@@ -27,7 +27,7 @@ namespace Minesweeper
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Model()
+        public GameModel()
         {
         }
 

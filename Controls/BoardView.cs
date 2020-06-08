@@ -81,7 +81,7 @@ namespace Minesweeper
             AddDrawingVisual(hoverVisual);
         }
 
-        public Model Model { get; set; }
+        public GameModel GameModel { get; set; }
 
         protected override int VisualChildrenCount => this.visuals.Count;
 
@@ -111,7 +111,7 @@ namespace Minesweeper
             base.OnMouseLeftButtonDown(e);
 
             Location loc = GetLocationFromPoint(e.GetPosition(this));
-            if (IsValidLocation(loc) && this.Model[loc.X, loc.Y].State == CellState.Default)
+            if (IsValidLocation(loc) && this.GameModel[loc.X, loc.Y].State == CellState.Default)
             {
                 using var hv = this.hoverVisual.RenderOpen();
                 hv.DrawRectangle(this.Background, null, GetCellRectFromLocation(loc));
@@ -125,11 +125,11 @@ namespace Minesweeper
             Location loc = GetLocationFromPoint(e.GetPosition(this));
             if (IsValidLocation(loc))
             {
-                this.Model.OpenCell(loc.X, loc.Y);
+                this.GameModel.OpenCell(loc.X, loc.Y);
             }
 
             using var hv = this.hoverVisual.RenderOpen();
-            if (IsValidLocation(loc) && this.Model[loc.X, loc.Y].State == CellState.Default)
+            if (IsValidLocation(loc) && this.GameModel[loc.X, loc.Y].State == CellState.Default)
             {
                 hv.DrawRectangle(StaticResources.MouseOverBrush, null, GetCellRectFromLocation(loc));
             }
@@ -148,11 +148,11 @@ namespace Minesweeper
             Location loc = GetLocationFromPoint(e.GetPosition(this));
             if (IsValidLocation(loc))
             {
-                this.Model.FlagCell(loc.X, loc.Y);
+                this.GameModel.FlagCell(loc.X, loc.Y);
             }
 
             using var hv = this.hoverVisual.RenderOpen();
-            if (IsValidLocation(loc) && this.Model[loc.X, loc.Y].State == CellState.Default)
+            if (IsValidLocation(loc) && this.GameModel[loc.X, loc.Y].State == CellState.Default)
             {
                 hv.DrawRectangle(StaticResources.MouseOverBrush, null, GetCellRectFromLocation(loc));
             }
@@ -172,7 +172,7 @@ namespace Minesweeper
 
             if (IsValidLocation(loc) && this.last != loc)
             {
-                if (this.Model[loc.X, loc.Y].State == CellState.Default)
+                if (this.GameModel[loc.X, loc.Y].State == CellState.Default)
                 {
                     // Draw hover effect.
                     using var hv = this.hoverVisual.RenderOpen();
@@ -216,7 +216,7 @@ namespace Minesweeper
 
         private void DrawBoard()
         {
-            if (this.Model != null)
+            if (this.GameModel != null)
             {
                 using var bv = this.boardVisual.RenderOpen();
                 bv.DrawRectangle(this.Background, null, this.GetRect());
@@ -225,7 +225,7 @@ namespace Minesweeper
                 {
                     for (int x = 0; x < this.columnCount; x++)
                     {
-                        Cell cell = this.Model[x, y];
+                        Cell cell = this.GameModel[x, y];
                         switch (cell.State)
                         {
                             case CellState.Detonated:
@@ -236,7 +236,7 @@ namespace Minesweeper
                                 break;
                             case CellState.Flagged:
                                 bv.DrawImage(
-                                    (this.Model.State == GameState.Lost && !cell.IsMine) ? StaticResources.IncorrectFlagImage : StaticResources.FlagImage,
+                                    (this.GameModel.State == GameState.Lost && !cell.IsMine) ? StaticResources.IncorrectFlagImage : StaticResources.FlagImage,
                                     GetCellRectFromCell(cell));
                                 DrawButtonShadows(bv, x, y);
                                 break;
@@ -253,7 +253,7 @@ namespace Minesweeper
                                 bv.DrawRectangle(null, new Pen(this.Shadow, 1), GetCellRectFromCell(cell));
                                 break;
                             case CellState.Default:
-                                if (this.Model.State == GameState.Lost && cell.IsMine)
+                                if (this.GameModel.State == GameState.Lost && cell.IsMine)
                                 {
                                     bv.DrawImage(StaticResources.MineImage, GetCellRectFromCell(cell));
                                 }

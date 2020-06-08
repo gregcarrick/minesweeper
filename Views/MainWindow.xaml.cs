@@ -10,7 +10,7 @@ namespace Minesweeper
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Model model;
+        private GameModel model;
 
         public MainWindow()
         {
@@ -53,11 +53,11 @@ namespace Minesweeper
 
         public void Reset()
         {
-            this.model = new Model();
+            this.model = new GameModel();
             this.model.PropertyChanged += model_PropertyChanged;
             this.model.Reset();
 
-            this.boardView.Model = this.model;
+            this.boardView.GameModel = this.model;
             this.boardView.Reset();
 
             this.IsEnabled = true;

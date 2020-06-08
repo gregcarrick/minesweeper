@@ -59,24 +59,24 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Button.cs" />
-    <Compile Include="ComparisonConverter.cs" />
-    <Compile Include="Difficulty.cs" />
-    <Compile Include="DifficultyModel.cs" />
-    <Compile Include="PlayerStatsItem.cs" />
-    <Compile Include="PlayerStatsModel.cs" />
-    <Compile Include="PlayerStatsWindow.xaml.cs">
-      <DependentUpon>PlayerStatsWindow.xaml</DependentUpon>
+    <Compile Include="Controls\Button.cs" />
+    <Compile Include="Util\ComparisonConverter.cs" />
+    <Compile Include="DataObjects\Difficulty.cs" />
+    <Compile Include="Models\DifficultyModel.cs" />
+    <Compile Include="DataObjects\PlayerStatsItem.cs" />
+    <Compile Include="Models\PlayerStatsModel.cs" />
+    <Compile Include="Views\PlayerStatsWindow.xaml.cs">
+      <DependentUpon>Views\PlayerStatsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StaticResources.cs" />
-    <Compile Include="NewGameSettingsWindow.xaml.cs">
-      <DependentUpon>NewGameSettingsWindow.xaml</DependentUpon>
+    <Compile Include="Resources\StaticResources.cs" />
+    <Compile Include="Views\NewGameSettingsWindow.xaml.cs">
+      <DependentUpon>Views\NewGameSettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="GameEndMessageWindow.xaml">
+    <Page Include="Views\GameEndMessageWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -84,21 +84,21 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BoardView.cs" />
-    <Compile Include="Cell.cs" />
-    <Compile Include="CellState.cs" />
-    <Compile Include="Counter.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="GameEndMessageWindow.xaml.cs">
-      <DependentUpon>GameEndMessageWindow.xaml</DependentUpon>
+    <Compile Include="Controls\BoardView.cs" />
+    <Compile Include="DataObjects\Cell.cs" />
+    <Compile Include="DataObjects\CellState.cs" />
+    <Compile Include="Controls\Counter.cs" />
+    <Compile Include="Util\Extensions.cs" />
+    <Compile Include="Views\GameEndMessageWindow.xaml.cs">
+      <DependentUpon>Views\GameEndMessageWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GameState.cs" />
-    <Compile Include="Location.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="DataObjects\GameState.cs" />
+    <Compile Include="DataObjects\Location.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
+      <DependentUpon>Views\MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="PlayerStatsWindow.xaml">
+    <Page Include="Views\PlayerStatsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -106,13 +106,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="NewGameSettingsWindow.xaml">
+    <Page Include="Views\NewGameSettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model.cs" />
+    <Compile Include="Models\GameModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -148,5 +148,6 @@
   <ItemGroup>
     <Resource Include="Images\incorrect-flag.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
