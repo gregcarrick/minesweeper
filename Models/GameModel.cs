@@ -175,10 +175,21 @@ namespace Minesweeper
             }
         }
 
-        public void OpenCell(int x, int y)
+        public void OpenCell(int x, int y, bool isChording)
         {
             Cell cell = this.mineField[x, y];
-            if (cell.State == CellState.Default)
+            if (cell.State == CellState.Opened && isChording)
+            {
+                // Play chord.
+                for (int i = Math.Max(0, x - 1); i <= Math.Min(this.columnCount - 1, x + 1); i++)
+                {
+                    for (int j = Math.Max(0, y - 1); j <= Math.Min(this.rowCount - 1, y + 1); j++)
+                    {
+                        OpenCell(i, j, false);
+                    }
+                }
+            }
+            else if (cell.State == CellState.Default)
             {
                 if (cell.IsMine)
                 {
@@ -212,7 +223,7 @@ namespace Minesweeper
                     // We're inside a clear block, so open the adjacent cells.
                     foreach (var coord in adjacentCellCoords)
                     {
-                        OpenCell(coord.Item1, coord.Item2);
+                        OpenCell(coord.Item1, coord.Item2, false);
                     }
                 }
 

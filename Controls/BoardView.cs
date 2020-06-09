@@ -1,4 +1,5 @@
 ﻿using Minesweeper.Properties;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
@@ -19,6 +20,7 @@ namespace Minesweeper
         private DrawingVisual hoverVisual;
 
         private Location last;
+        private bool isChording;
 
         public static readonly DependencyProperty BackgroundProperty;
         public Brush Background
@@ -111,10 +113,26 @@ namespace Minesweeper
             base.OnMouseLeftButtonDown(e);
 
             Location loc = GetLocationFromPoint(e.GetPosition(this));
-            if (IsValidLocation(loc) && this.GameModel[loc.X, loc.Y].State == CellState.Default)
+            if (IsValidLocation(loc))
             {
                 using var hv = this.hoverVisual.RenderOpen();
-                hv.DrawRectangle(this.Background, null, GetCellRectFromLocation(loc));
+                switch (GetCellStateFromLocation(loc))
+                {
+                    case CellState.Default:
+                        DrawCellPressingOverlay(hv, loc);
+                        break;
+                    case CellState.Opened:
+                        if (e.RightButton == MouseButtonState.Pressed)
+                        {
+                            // Pressing both buttons together - chording.
+                            this.isChording = true;
+                        }
+                        if (this.isChording)
+                        {
+                            DrawChordingOverlay(hv, loc);
+                        }
+                        break;
+                }
             }
         }
 
@@ -125,13 +143,14 @@ namespace Minesweeper
             Location loc = GetLocationFromPoint(e.GetPosition(this));
             if (IsValidLocation(loc))
             {
-                this.GameModel.OpenCell(loc.X, loc.Y);
+                this.GameModel.OpenCell(loc.X, loc.Y, this.isChording);
             }
+            this.isChording = false;
 
             using var hv = this.hoverVisual.RenderOpen();
-            if (IsValidLocation(loc) && this.GameModel[loc.X, loc.Y].State == CellState.Default)
+            if (IsValidLocation(loc) && GetCellStateFromLocation(loc) == CellState.Default)
             {
-                hv.DrawRectangle(StaticResources.MouseOverBrush, null, GetCellRectFromLocation(loc));
+                DrawCellHoverOverlay(hv, loc);
             }
             else
             {
@@ -145,16 +164,40 @@ namespace Minesweeper
         {
             base.OnMouseRightButtonDown(e);
 
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                // Pressing both buttons together - chording
+                this.isChording = true;
+            }
+
             Location loc = GetLocationFromPoint(e.GetPosition(this));
-            if (IsValidLocation(loc))
+            if (!this.isChording && IsValidLocation(loc))
             {
                 this.GameModel.FlagCell(loc.X, loc.Y);
             }
 
             using var hv = this.hoverVisual.RenderOpen();
-            if (IsValidLocation(loc) && this.GameModel[loc.X, loc.Y].State == CellState.Default)
+            if (IsValidLocation(loc))
             {
-                hv.DrawRectangle(StaticResources.MouseOverBrush, null, GetCellRectFromLocation(loc));
+                switch (GetCellStateFromLocation(loc))
+                {
+                    case CellState.Default:
+                        if (e.LeftButton == MouseButtonState.Pressed)
+                        {
+                            DrawCellPressingOverlay(hv, loc);
+                        }
+                        else
+                        {
+                            DrawCellHoverOverlay(hv, loc);
+                        }
+                        break;
+                    case CellState.Opened:
+                        if (this.isChording)
+                        {
+                            DrawChordingOverlay(hv, loc);
+                        }
+                        break;
+                }
             }
             else
             {
@@ -170,28 +213,48 @@ namespace Minesweeper
 
             Location loc = GetLocationFromPoint(e.GetPosition(this));
 
-            if (IsValidLocation(loc) && this.last != loc)
+            if (this.last != loc)
             {
-                if (this.GameModel[loc.X, loc.Y].State == CellState.Default)
+                if (this.isChording && e.MiddleButton == MouseButtonState.Released
+                    && (e.LeftButton == MouseButtonState.Released || e.RightButton == MouseButtonState.Released))
                 {
-                    // Draw hover effect.
-                    using var hv = this.hoverVisual.RenderOpen();
-                    Brush brush = StaticResources.MouseOverBrush;
-                    if (e.LeftButton == MouseButtonState.Pressed)
+                    // Was chording, but mouse is now over a different cell and one of the buttons has been released.
+                    this.isChording = false;
+                }
+
+                using var hv = this.hoverVisual.RenderOpen();
+                if (IsValidLocation(loc))
+                {
+                    switch (GetCellStateFromLocation(loc))
                     {
-                        brush = this.Background;
+                        case CellState.Default:
+                            if (e.LeftButton == MouseButtonState.Pressed)
+                            {
+                                DrawCellPressingOverlay(hv, loc);
+                            }
+                            else
+                            {
+                                // Draw hover effect.
+                                DrawCellHoverOverlay(hv, loc);
+                            }
+                            break;
+                        case CellState.Opened:
+                            if (this.isChording)
+                            {
+                                DrawChordingOverlay(hv, loc);
+                            }
+                            break;
+                        default:
+                            // Clear the top layer of any previous graphic.
+                            break;
                     }
-                    hv.DrawRectangle(brush, null, GetCellRectFromLocation(loc));
+
+                    this.last = loc;
                 }
                 else
                 {
-                    // We're still over the board, but over a cell that's
-                    // either opened or flagged.
                     // Clear the top layer of any previous graphic.
-                    using var hv = this.hoverVisual.RenderOpen();
                 }
-
-                this.last = loc;
             }
         }
 
@@ -286,13 +349,13 @@ namespace Minesweeper
                     brush = Brushes.DarkBlue;
                     break;
                 case 5:
-                    brush = Brushes.DarkViolet;
+                    brush = Brushes.DarkRed;
                     break;
                 case 6:
                     brush = Brushes.Teal;
                     break;
                 case 7:
-                    brush = Brushes.DarkRed;
+                    brush = Brushes.DarkViolet;
                     break;
                 case 8:
                     brush = Brushes.DimGray;
@@ -370,6 +433,35 @@ namespace Minesweeper
         private static Rect GetCellRectFromLocation(Location loc)
         {
             return new Rect(loc.X * cellSize, loc.Y * cellSize, cellSize, cellSize);
+        }
+
+        private CellState GetCellStateFromLocation(Location loc)
+        {
+            return this.GameModel[loc.X, loc.Y].State;
+        }
+
+        private void DrawCellHoverOverlay(DrawingContext dc, Location loc)
+        {
+            dc.DrawRectangle(StaticResources.MouseOverBrush, null, GetCellRectFromLocation(loc));
+        }
+
+        private void DrawCellPressingOverlay(DrawingContext dc, Location loc)
+        {
+            dc.DrawRectangle(this.Background, new Pen(this.Shadow, 1), GetCellRectFromLocation(loc));
+        }
+
+        private void DrawChordingOverlay(DrawingContext dc, Location loc)
+        {
+            for (int x = Math.Max(0, loc.X - 1); x <= Math.Min(this.columnCount - 1, loc.X + 1); x++)
+            {
+                for (int y = Math.Max(0, loc.Y - 1); y <= Math.Min(this.rowCount - 1, loc.Y + 1); y++)
+                {
+                    if (this.GameModel[x, y].State == CellState.Default)
+                    {
+                        DrawCellPressingOverlay(dc, new Location(x, y));
+                    }
+                }
+            }
         }
     }
 }
